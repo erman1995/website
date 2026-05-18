@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akademik İş Bulma Simülatörü</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#f5f0e8;color:#1a1a2e;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.wrap{max-width:640px;width:100%}
+
+/* INTRO SCREEN */
+.intro{text-align:center;padding:3rem 2rem}
+.intro h1{font-size:2rem;font-weight:500;margin-bottom:.4rem}
+.intro .sub{font-size:.82rem;color:#6b6b7a;font-family:'DM Mono',monospace;margin-bottom:2.5rem}
+.intro-form{display:flex;flex-direction:column;gap:1rem;max-width:360px;margin:0 auto}
+.intro label{font-size:.75rem;font-family:'DM Mono',monospace;color:#6b6b7a;text-align:left;letter-spacing:.06em}
+.intro input, .intro select{padding:12px 16px;border:1px solid #d8d0c0;border-radius:8px;font-family:'Outfit',sans-serif;font-size:15px;background:#fff;color:#1a1a2e;outline:none;transition:border-color .2s}
+.intro input:focus, .intro select:focus{border-color:#b8960c}
+.start-btn{padding:13px;background:#1a1a2e;color:#f5f0e8;border:none;border-radius:8px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background .2s;margin-top:.5rem}
+.start-btn:hover{background:#2d4a7a}
+.intro-note{font-size:12px;color:#6b6b7a;margin-top:1rem;line-height:1.6}
+
+/* GAME SCREEN */
+.game{display:none}
+h1{font-size:1.4rem;font-weight:500;margin-bottom:.2rem;color:#1a1a2e}
+.subtitle{font-size:.78rem;color:#6b6b7a;margin-bottom:1.2rem;font-family:'DM Mono',monospace}
+.hud{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.stat{background:#fff;border:1px solid #d8d0c0;border-radius:8px;padding:8px 14px;flex:1;min-width:75px}
+.stat-label{font-size:11px;color:#6b6b7a;margin-bottom:2px;font-family:'DM Mono',monospace}
+.stat-val{font-size:17px;font-weight:500;color:#1a1a2e}
+.bar-wrap{margin-bottom:1rem}
+.bar-label{font-size:11px;color:#6b6b7a;margin-bottom:4px;display:flex;justify-content:space-between;font-family:'DM Mono',monospace}
+.bar-track{height:5px;background:#d8d0c0;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:#2d4a7a;transition:width .5s ease}
+.phase-badge{font-size:11px;color:#b8960c;font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:.5rem}
+.log{background:#fff;border:1px solid #d8d0c0;border-left:3px solid #d8d0c0;border-radius:8px;padding:16px 18px;margin-bottom:.8rem;min-height:90px;font-size:14px;line-height:1.75;color:#1a1a2e}
+.event-box{border:1px solid #d8d0c0;border-radius:8px;padding:10px 14px;margin-bottom:.8rem;font-size:13px;color:#6b6b7a;line-height:1.6;display:none;background:#fff9ee}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.act-btn{padding:12px 14px;font-size:13px;text-align:left;border:1px solid #d8d0c0;border-radius:8px;background:#fff;color:#1a1a2e;cursor:pointer;line-height:1.4;transition:background .15s,border-color .15s;font-family:'Outfit',sans-serif}
+.act-btn:hover:not(:disabled){background:#f5f0e8;border-color:#b8960c}
+.act-btn:disabled{opacity:.35;cursor:not-allowed}
+.act-btn .cost{font-size:11px;color:#6b6b7a;display:block;margin-top:3px;font-family:'DM Mono',monospace}
+.turn-info{font-size:11px;color:#6b6b7a;margin-bottom:.8rem;font-family:'DM Mono',monospace;min-height:16px}
+.good{color:#1D9E75;font-weight:500}
+.bad{color:#E24B4A;font-weight:500}
+.warn{color:#BA7517;font-weight:500}
+.em{font-weight:500}
+footer{margin-top:1.5rem;font-size:11px;color:#6b6b7a;text-align:center;font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <div class="intro" id="intro-screen">
+    <h1>Akademik İş Bulma<br>Simülatörü</h1>
+    <div class="sub">postdoc hayatı · başvuru sezonu · kadro mücadelesi</div>
+    <div class="intro-form">
+      <div>
+        <label>ADINIZ</label>
+        <input type="text" id="inp-name" placeholder="Dr. ..." maxlength="30">
+      </div>
+      <div>
+        <label>ALAN</label>
+        <select id="inp-field">
+          <option value="Uluslararası İlişkiler">Uluslararası İlişkiler</option>
+          <option value="Siyaset Bilimi">Siyaset Bilimi</option>
+          <option value="Sosyoloji">Sosyoloji</option>
+          <option value="Tarih">Tarih</option>
+          <option value="Ekonomi">Ekonomi</option>
+          <option value="Felsefe">Felsefe</option>
+          <option value="Hukuk">Hukuk</option>
+          <option value="Psikoloji">Psikoloji</option>
+        </select>
+      </div>
+      <div>
+        <label>POSTDOC ÜNİVERSİTESİ</label>
+        <input type="text" id="inp-uni" placeholder="ör. Bilkent Üniversitesi" maxlength="40">
+      </div>
+      <button class="start-btn" onclick="startGame()">Oyunu Başlat →</button>
+    </div>
+    <div class="intro-note">30 tur içinde yeterli yayın ve ağ kurarak<br>kadro başvurusunda başarılı olabilecek misin?</div>
+  </div>
+
+  <!-- GAME -->
+  <div class="game" id="game-screen">
+    <h1 id="g-title">Dr. ...</h1>
+    <div class="subtitle" id="g-subtitle"></div>
+    <div class="phase-badge" id="phase-badge"></div>
+    <div class="hud">
+      <div class="stat"><div class="stat-label">Yayın</div><div class="stat-val" id="s-pub">0</div></div>
+      <div class="stat"><div class="stat-label">Ağ</div><div class="stat-val" id="s-net">0</div></div>
+      <div class="stat"><div class="stat-label">Motivasyon</div><div class="stat-val" id="s-mot">100</div></div>
+      <div class="stat"><div class="stat-label">Para</div><div class="stat-val" id="s-money">1000₺</div></div>
+      <div class="stat"><div class="stat-label">Tur</div><div class="stat-val" id="s-turn">1/30</div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-label"><span>Kariyer ilerleme</span><span id="prog-pct">0%</span></div>
+      <div class="bar-track"><div class="bar-fill" id="prog-bar" style="width:0%"></div></div>
+    </div>
+    <div class="log" id="log"></div>
+    <div class="event-box" id="event-box"></div>
+    <div class="turn-info" id="turn-info"></div>
+    <div class="actions" id="actions"></div>
+    <footer id="footer-txt"></footer>
+  </div>
+
+</div>
+<script>
+let NAME = "Araştırmacı";
+let FIELD = "Uluslararası İlişkiler";
+let UNI = "üniversiten";
+
+const state={pub:0,net:0,mot:100,money:1000,turn:1,maxTurn:30,applications:0,interviews:0,kafaScore:0,gameOver:false};
+
+function startGame(){
+  const n = document.getElementById("inp-name").value.trim();
+  const f = document.getElementById("inp-field").value;
+  const u = document.getElementById("inp-uni").value.trim();
+  NAME = n || "Araştırmacı";
+  FIELD = f;
+  UNI = u || "üniversiten";
+  document.getElementById("intro-screen").style.display = "none";
+  document.getElementById("game-screen").style.display = "block";
+  document.getElementById("g-title").textContent = "Dr. " + NAME;
+  document.getElementById("g-subtitle").textContent = FIELD + " · " + UNI;
+  document.getElementById("footer-txt").textContent = "Akademik Kariyer Simülatörü v1.0";
+  document.getElementById("log").innerHTML =
+    'Hoş geldin, <span class="em">Dr. ' + NAME + '!</span> ' + UNI + '\'ndaki postdoc maceran başlıyor.<br><br>' +
+    'Elinde <span class="em">0 yayın</span>, cebinde <span class="em">1000₺</span> ve ' + FIELD + ' alanında derin bir birikim var. ' +
+    'Ama bu yetecek mi? 30 turda kadroyu kazanabilecek misin?';
+  render();
+}
+
+const events=[
+  {chance:.12, msg: ()=>'<span class="bad">Reviewer 2 hakaretname gönderdi.</span> "Bu makale '+FIELD+' literatürüne hiçbir katkı sunmuyor." Motivasyon -15.', effect:s=>{s.mot=Math.max(0,s.mot-15);}},
+  {chance:.10, msg: ()=>'<span class="good">Makalenin minor revision aldı!</span> Diğer iki reviewer Dr. '+NAME+'\'ı övdü. Motivasyon +10.', effect:s=>{s.mot=Math.min(100,s.mot+10);}},
+  {chance:.08, msg: ()=>'<span class="warn">Konferans bursun reddedildi.</span> "Bütçe kısıtlaması." Para -200₺.', effect:s=>{s.money=Math.max(0,s.money-200);}},
+  {chance:.10, msg: ()=>'<span class="good">'+UNI+' seni konuşmaya davet etti!</span> Ağ +2, Motivasyon +5.', effect:s=>{s.net+=2;s.mot=Math.min(100,s.mot+5);}},
+  {chance:.07, msg: ()=>'<span class="bad">Başvurduğun üniversite kadro dondurdu.</span> 2027\'ye ertelendi.', effect:s=>{s.mot=Math.max(0,s.mot-10);}},
+  {chance:.06, msg: ()=>'<span class="good">Twitter\'da '+FIELD+' thread\'in viral oldu!</span> Ağ +3.', effect:s=>{s.net+=3;}},
+  {chance:.08, msg: ()=>'<span class="warn">Akraba toplantısında "Dr. '+NAME+', hâlâ mı okuyorsun?" sorusu.</span> Motivasyon -8.', effect:s=>{s.mot=Math.max(0,s.mot-8);}},
+  {chance:.07, msg: ()=>'<span class="good">Google Scholar\'da ilk atıfın geldi!</span> Yayın +1, Motivasyon +12.', effect:s=>{s.pub+=1;s.mot=Math.min(100,s.mot+12);}},
+  {chance:.06, msg: ()=>'<span class="bad">Makale desk rejection yedi.</span> "'+FIELD+' dergimizin kapsamı dışında." 3 aylık emek gitti.', effect:s=>{s.mot=Math.max(0,s.mot-12);}},
+  {chance:.06, msg: ()=>'<span class="good">Editör Dr. '+NAME+'\'ı reviewer olarak davet etti!</span> Ağ +2.', effect:s=>{s.net+=2;}},
+  {chance:.05, msg: ()=>'<span class="good">Meslektaşın ortak makale teklif etti.</span> '+FIELD+' alanı genişliyor. Motivasyon +8.', effect:s=>{s.mot=Math.min(100,s.mot+8);}},
+  {chance:.05, msg: ()=>'<span class="warn">YÖK mevzuatı değişti.</span> Başvuru kriterleri yeniden belirleniyor. Kafa karışıklığı. Motivasyon -5.', effect:s=>{s.mot=Math.max(0,s.mot-5);}},
+];
+
+const actions=[
+  {label:"Makale yaz", cost:"Motivasyon -10 | Tur harcı", phases:[1,2,3], disabled:s=>s.mot<10,
+   run:s=>{s.mot-=10;const r=Math.random();
+     if(r<.35){s.pub+=1;return'<span class="good">Makale kabul edildi!</span> Dr. '+NAME+' yayın listesine +1 ekledi. Emek boşa gitmedi.';}
+     else if(r<.65){return'<span class="warn">Major revision.</span> Reviewer 2 yine Dr. '+NAME+'\'ın hayatını zorlaştırdı. Devam ediyorsun.';}
+     else{return'<span class="bad">Red.</span> "'+FIELD+' dergimizin scope\'u dışında." Başka dergiye gönder.';}}},
+  {label:"Konferansa git", cost:"Para -300₺, Motivasyon -5 | Ağ +2-4", phases:[1,2,3], disabled:s=>s.money<300||s.mot<5,
+   run:s=>{s.money-=300;s.mot-=5;const g=2+Math.floor(Math.random()*3);s.net+=g;
+     const m=['ISA\'da panel harika geçti! Ağ +'+g+'.','UIK\'da tanıştığın biri Dr. '+NAME+'\'a pozisyon önerdi. Ağ +'+g+'.','Bildirin övgü aldı. Ağ +'+g+'.'];
+     return'<span class="good">'+m[Math.floor(Math.random()*m.length)]+'</span>';}},
+  {label:"Mola ver", cost:"Motivasyon +20", phases:[1,2,3], disabled:s=>s.mot>=95,
+   run:s=>{s.mot=Math.min(100,s.mot+20);
+     const m=["Gitarını çaldın. Ruh sağlığın yerinde.","Netflix, çay. Hayat güzel.","Şehri gezdın. Yenilenmiş hissediyorsun.","Uyudun. 10 saat. Harika.","Sevdiklerin Dr. "+NAME+"'ı dinledi. İyi hissettirdi."];
+     return'<span class="good">'+m[Math.floor(Math.random()*m.length)]+'</span> Motivasyon +20.';}},
+  {label:"CV başvurusu gönder", cost:"Motivasyon -8 | Min. 3 yayın önerilir", phases:[2,3], disabled:s=>s.mot<8,
+   run:s=>{s.mot-=8;s.applications++;const base=(s.pub*15)+(s.net*8);const roll=Math.random()*100;
+     if(roll<base*.4){s.interviews++;return'<span class="good">Mülakat daveti geldi!</span> Dr. '+NAME+'\'ın '+s.applications+'. başvurusu meyve verdi! Mülakat sayısı: '+s.interviews+'.';}
+     else if(roll<base*.6){return'<span class="warn">Long-list\'e girdin.</span> Dr. '+NAME+' haber bekliyor...';}
+     else{return'<span class="bad">Red maili geldi.</span> "Tüm adaylarımızla gurur duyuyoruz ancak..." '+s.applications+'. başvurun, Dr. '+NAME+'.';}}},
+  {label:"Mülakat hazırlığı", cost:"Motivasyon -5 | Mülakat skoru +10", phases:[2,3], disabled:s=>s.interviews<1||s.mot<5,
+   run:s=>{s.mot-=5;s.kafaScore+=10;
+     const t=["Job talk\'ını prova ettin. Akıcı anlatıyorsun.","Araştırma gündemin netleşti: "+FIELD+" odaklı.","Öğretim felsefeni yazdın. Etkileyici.","Mock interview yaptın. Hazırsın."];
+     return'<span class="good">'+t[Math.floor(Math.random()*t.length)]+'</span> Mülakat skoru +10.';}},
+  {label:"Ek gelir — ders ver", cost:"Para +500₺, Motivasyon -12", phases:[1,2,3], disabled:s=>s.mot<12,
+   run:s=>{s.money+=500;s.mot-=12;
+     return'Dr. '+NAME+' misafir ders verdı. Para +500₺. Öğrenciler ilgili, sen yorgunsun.';}},
+];
+
+function getPhase(){return state.turn<=10?1:state.turn<=20?2:3;}
+function getProgress(){return Math.min(99,Math.round((state.pub*12)+(state.net*5)+(state.interviews*15)+(state.kafaScore*.5)+(state.turn*.5)));}
+
+function triggerEvent(){
+  const ev=events.find(e=>Math.random()<e.chance);
+  if(ev){ev.effect(state);const b=document.getElementById("event-box");b.innerHTML='<strong>Rastgele olay:</strong> '+ev.msg();b.style.display='block';setTimeout(()=>b.style.display='none',4500);}
+}
+
+function checkEnd(){
+  if(state.mot<=0){end(false,"motivasyon");return true;}
+  if(state.money<=0){end(false,"para");return true;}
+  if(state.turn>state.maxTurn){end(getProgress()>=70,"zaman");return true;}
+  return false;
+}
+
+function end(win,reason){
+  state.gameOver=true;
+  document.getElementById("actions").innerHTML='<button class="act-btn" style="grid-column:1/-1;text-align:center;border-color:#b8960c;font-weight:500" onclick="resetGame()">Yeniden oyna ↩</button>';
+  let msg="";
+  if(win){msg='<span class="good">TEBRİKLER, Dr. '+NAME+'!</span> '+state.pub+' yayın, '+state.interviews+' mülakat ve '+state.kafaScore+' puan mülakat hazırlığıyla <span class="em">kadroya kabul edildin!</span><br><br>'+FIELD+' alanında artık resmi olarak bir akademik kurumun mensubusu. Congratulations, Assistant Professor! 🎓';}
+  else if(reason==="motivasyon"){msg='<span class="bad">Dr. '+NAME+'\'ın motivasyonu tükendi.</span> Reviewer 2, akraba soruları ve sürekli reddiyeler ağır geldi.<br><br>Bir süre mola ver. '+FIELD+' alanına olan tutkun kaybolmadı — sadece dinlenmen gerekiyor.';}
+  else if(reason==="para"){msg='<span class="bad">Bütçe tükendi, Dr. '+NAME+'.</span> Akademik emek görünmez ama masraflar çok net görünür.<br><br>Not: Bu gerçek bir sistem sorunu.';}
+  else{const p=getProgress();msg='30 tur bitti. Dr. '+NAME+'\'ın kariyer puanı: <span class="em">'+p+'</span>.<br><br>'+(p>=55?'<span class="warn">Umut verici bir süreç ama kadro hâlâ gelmedi.</span> Postdoc uzatması mı, sanayi mi? Karar senin.':'<span class="bad">Bu sefer olmadı.</span> Ama her red bir deneyimdir, Dr. '+NAME+'. Yeniden dene.');}
+  document.getElementById("log").innerHTML=msg;
+  document.getElementById("prog-bar").style.width=getProgress()+"%";
+  document.getElementById("prog-pct").textContent=getProgress()+"%";
+}
+
+function resetGame(){
+  Object.assign(state,{pub:0,net:0,mot:100,money:1000,turn:1,applications:0,interviews:0,kafaScore:0,gameOver:false});
+  document.getElementById("log").innerHTML='Yeni başlangıç, Dr. '+NAME+'! Tekrar arenada. Ne yapacaksın?';
+  document.getElementById("event-box").style.display='none';
+  render();
+}
+
+function doAction(idx){
+  if(state.gameOver)return;
+  const act=actions[idx];
+  if(act.disabled(state))return;
+  const msg=act.run(state);
+  state.turn++;
+  triggerEvent();
+  document.getElementById("log").innerHTML=msg;
+  if(!checkEnd())render();
+}
+
+const phases=[
+  {name:"Postdoc — Birikim Dönemi",desc:"Yayın yap, ağ kur, konferanslara git."},
+  {name:"Başvuru Sezonu",desc:"CV'ni gönder, cover letter yaz, bekle."},
+  {name:"Mülakat ve Final",desc:"Son hamle — iş senin mi değil mi?"},
+];
+
+function render(){
+  const ph=getPhase();
+  document.getElementById("s-pub").textContent=state.pub;
+  document.getElementById("s-net").textContent=state.net;
+  document.getElementById("s-mot").textContent=state.mot;
+  document.getElementById("s-money").textContent=state.money.toLocaleString("tr")+"₺";
+  document.getElementById("s-turn").textContent=state.turn+"/"+state.maxTurn;
+  document.getElementById("phase-badge").textContent=phases[ph-1].name+" — "+phases[ph-1].desc;
+  const prog=getProgress();
+  document.getElementById("prog-bar").style.width=prog+"%";
+  document.getElementById("prog-pct").textContent=prog+"%";
+  const actDiv=document.getElementById("actions");
+  actDiv.innerHTML="";
+  actions.filter(a=>a.phases.includes(ph)).forEach(act=>{
+    const btn=document.createElement("button");
+    btn.className="act-btn";btn.disabled=act.disabled(state);
+    btn.innerHTML=act.label+'<span class="cost">'+act.cost+'</span>';
+    btn.onclick=()=>doAction(actions.indexOf(act));
+    actDiv.appendChild(btn);
+  });
+  const tm=["Masa başındasın, Dr. "+NAME+". Ekran açık, kahve soğumuş.","Koridorlarda yürüyorsun. Hedefin kadro.","Postdoc hayatı: özgürlük + belirsizlik = sen.","Bir e-posta geldi. Red mi kabul mü?","Yayın listene bakıyorsun. Yeterli mi?",""];
+  document.getElementById("turn-info").textContent=tm[Math.floor(Math.random()*tm.length)];
+}
+</script>
+</body>
+</html>
