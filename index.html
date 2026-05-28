@@ -8,1022 +8,704 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink:      #1a1a2e;
-    --cream:    #f5f0e8;
-    --gold:     #b8960c;
-    --gold-lt:  #d4af37;
-    --muted:    #6b6b7a;
-    --rule:     #d8d0c0;
-    --card:     #ffffff;
-    --accent:   #2d4a7a;
+    --ink:#1a1a2e; --cream:#f5f0e8; --gold:#b8960c; --gold-lt:#d4af37;
+    --muted:#6b6b7a; --rule:#d8d0c0; --card:#ffffff; --accent:#2d4a7a;
   }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.6;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:64px;background:rgba(245,240,232,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;letter-spacing:.04em;color:var(--ink);text-decoration:none;}
+  .nav-right{display:flex;align-items:center;gap:2rem;}
+  .nav-links{display:flex;gap:2.4rem;list-style:none;}
+  .nav-links a{font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer;}
+  .nav-links a:hover{color:var(--gold);}
+  .lang-switch{display:flex;gap:6px;font-family:'DM Mono',monospace;font-size:.72rem;border:1px solid var(--rule);border-radius:4px;overflow:hidden;}
+  .lang-btn{padding:.35rem .7rem;background:transparent;border:none;color:var(--muted);cursor:pointer;letter-spacing:.05em;transition:all .2s;}
+  .lang-btn.active{background:var(--ink);color:var(--cream);}
 
-  html { scroll-behavior: smooth; }
+  /* HERO */
+  #hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:64px;}
+  .hero-left{display:flex;flex-direction:column;justify-content:center;padding:6rem 4rem 6rem 6rem;position:relative;}
+  .hero-left::after{content:'';position:absolute;right:0;top:10%;bottom:10%;width:1px;background:var(--rule);}
+  .hero-tag{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  .hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6vw,5.5rem);font-weight:300;line-height:1.08;margin-bottom:1.6rem;}
+  .hero-name em{font-style:italic;color:var(--accent);}
+  .hero-desc{font-size:1rem;color:var(--muted);max-width:42ch;line-height:1.75;margin-bottom:2.4rem;}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2.8rem;}
+  .badge{font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule);padding:.3rem .8rem;border-radius:2px;color:var(--ink);background:var(--card);}
+  .hero-cta{display:flex;gap:1rem;}
+  .btn-primary{font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.8rem 2rem;background:var(--ink);color:var(--cream);border:none;cursor:pointer;text-decoration:none;transition:background .2s;display:inline-block;}
+  .btn-primary:hover{background:var(--accent);}
+  .btn-outline{font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.8rem 2rem;background:transparent;color:var(--ink);border:1px solid var(--ink);cursor:pointer;text-decoration:none;transition:all .2s;display:inline-block;}
+  .btn-outline:hover{background:var(--ink);color:var(--cream);}
 
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.6;
-  }
+  .hero-right{display:flex;flex-direction:column;justify-content:center;padding:6rem 6rem 6rem 4rem;}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem;}
+  .stat-num{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:300;line-height:1;color:var(--gold);margin-bottom:.3rem;}
+  .stat-label{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .affil-block{border-left:2px solid var(--gold);padding-left:1.2rem;}
+  .affil-block p{font-size:.88rem;color:var(--muted);line-height:1.6;}
+  .affil-block strong{color:var(--ink);font-weight:500;}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 4rem;
-    height: 64px;
-    background: rgba(245,240,232,0.92);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--rule);
-  }
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    letter-spacing: .04em;
-    color: var(--ink);
-    text-decoration: none;
-  }
-  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
-  .nav-links a {
-    font-size: .78rem;
-    font-weight: 500;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--gold); }
+  /* SECTION SHARED */
+  section{padding:6rem 0;}
+  .container{max-width:1100px;margin:0 auto;padding:0 4rem;}
+  .section-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+  .section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,2.8rem);font-weight:300;margin-bottom:3rem;line-height:1.15;}
 
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding-top: 64px;
-  }
-  .hero-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem 4rem 6rem 6rem;
-    position: relative;
-  }
-  .hero-left::after {
-    content: '';
-    position: absolute; right: 0; top: 10%; bottom: 10%;
-    width: 1px; background: var(--rule);
-  }
-  .hero-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: .72rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1.2rem;
-  }
-  .hero-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3rem, 6vw, 5.5rem);
-    font-weight: 300;
-    line-height: 1.08;
-    margin-bottom: 1.6rem;
-  }
-  .hero-name em {
-    font-style: italic;
-    color: var(--accent);
-  }
-  .hero-desc {
-    font-size: 1rem;
-    color: var(--muted);
-    max-width: 42ch;
-    line-height: 1.75;
-    margin-bottom: 2.4rem;
-  }
-  .hero-badges {
-    display: flex; flex-wrap: wrap; gap: .6rem;
-    margin-bottom: 2.8rem;
-  }
-  .badge {
-    font-size: .7rem;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    border: 1px solid var(--rule);
-    padding: .3rem .8rem;
-    border-radius: 2px;
-    color: var(--ink);
-    background: var(--card);
-  }
-  .hero-cta {
-    display: flex; gap: 1rem;
-  }
-  .btn-primary {
-    font-size: .78rem;
-    font-weight: 500;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .8rem 2rem;
-    background: var(--ink);
-    color: var(--cream);
-    border: none; cursor: pointer;
-    text-decoration: none;
-    transition: background .2s;
-  }
-  .btn-primary:hover { background: var(--accent); }
-  .btn-outline {
-    font-size: .78rem;
-    font-weight: 500;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .8rem 2rem;
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--ink);
-    cursor: pointer;
-    text-decoration: none;
-    transition: all .2s;
-  }
-  .btn-outline:hover { background: var(--ink); color: var(--cream); }
+  /* ABOUT */
+  #about{background:var(--card);}
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:6rem;align-items:start;}
+  .about-text p{font-size:.95rem;color:var(--muted);line-height:1.85;margin-bottom:1.2rem;}
+  .about-text p strong{color:var(--ink);font-weight:500;}
+  .interests-list{margin-top:2rem;display:flex;flex-direction:column;gap:.5rem;}
+  .interest-item{display:flex;align-items:center;gap:.8rem;font-size:.85rem;color:var(--muted);}
+  .interest-item::before{content:'▸';color:var(--gold);font-size:.7rem;flex-shrink:0;}
+  .edu-timeline{display:flex;flex-direction:column;gap:1.6rem;}
+  .edu-item{border-left:1px solid var(--rule);padding-left:1.2rem;position:relative;}
+  .edu-item::before{content:'';position:absolute;left:-4px;top:6px;width:7px;height:7px;border-radius:50%;background:var(--gold);}
+  .edu-year{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;color:var(--gold);margin-bottom:.2rem;}
+  .edu-degree{font-weight:500;font-size:.9rem;margin-bottom:.1rem;}
+  .edu-school{font-size:.82rem;color:var(--muted);}
+  .cv-section-title{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule);}
 
-  .hero-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem 6rem 6rem 4rem;
-  }
-  .stat-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    margin-bottom: 3rem;
-  }
-  .stat-item {}
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3.2rem;
-    font-weight: 300;
-    line-height: 1;
-    color: var(--gold);
-    margin-bottom: .3rem;
-  }
-  .stat-label {
-    font-size: .72rem;
-    font-weight: 500;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .affil-block {
-    border-left: 2px solid var(--gold);
-    padding-left: 1.2rem;
-  }
-  .affil-block p {
-    font-size: .88rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .affil-block strong { color: var(--ink); font-weight: 500; }
+  /* PUBLICATIONS */
+  #publications{background:var(--cream);}
+  .pub-filter{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+  .filter-btn{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid var(--rule);background:var(--card);color:var(--muted);cursor:pointer;transition:all .2s;border-radius:2px;}
+  .filter-btn.active,.filter-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+  .pub-list{display:flex;flex-direction:column;gap:1px;}
+  .pub-item{background:var(--card);padding:1.6rem 2rem;border-left:3px solid transparent;transition:border-color .2s,transform .15s;position:relative;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap;}
+  .pub-item:hover{border-left-color:var(--gold);transform:translateX(3px);}
+  .pub-content{flex:1;min-width:0;}
+  .pub-meta{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;flex-wrap:wrap;}
+  .pub-type{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;font-weight:400;}
+  .pub-type.a1{background:#e8f0e0;color:#3a6020;}
+  .pub-type.a2{background:#e0e8f4;color:#20406a;}
+  .pub-type.book{background:#f0e8e0;color:#6a4020;}
+  .pub-type.other{background:#f0f0f0;color:#555;}
+  .pub-year{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);}
+  .pub-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:400;line-height:1.4;margin-bottom:.4rem;color:var(--ink);}
+  .pub-authors{font-size:.78rem;color:var(--muted);margin-bottom:.3rem;}
+  .pub-authors strong{color:var(--ink);font-weight:500;}
+  .pub-journal{font-size:.8rem;font-style:italic;color:var(--accent);}
+  .pub-actions{display:flex;flex-direction:column;gap:.4rem;align-items:flex-end;flex-shrink:0;}
+  .pub-link{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .9rem;border:1px solid var(--ink);color:var(--ink);text-decoration:none;border-radius:2px;transition:all .2s;white-space:nowrap;}
+  .pub-link:hover{background:var(--ink);color:var(--cream);}
+  .pub-link.secondary{border-color:var(--rule);color:var(--muted);}
+  .pub-link.secondary:hover{border-color:var(--ink);color:var(--ink);background:transparent;}
 
-  /* ── SECTION SHARED ── */
-  section { padding: 6rem 0; }
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 4rem; }
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: .7rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: .8rem;
-  }
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 3.5vw, 2.8rem);
-    font-weight: 300;
-    margin-bottom: 3rem;
-    line-height: 1.15;
-  }
-  .divider {
-    width: 3rem; height: 1px;
-    background: var(--gold);
-    margin-bottom: 3rem;
-  }
+  /* TEACHING */
+  #teaching{background:var(--card);}
+  .teaching-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+  .course-card{border:1px solid var(--rule);padding:1.8rem;position:relative;overflow:hidden;transition:border-color .2s;}
+  .course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+  .course-card:hover::before{transform:scaleX(1);}
+  .course-card:hover{border-color:var(--gold-lt);}
+  .course-code{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;color:var(--gold);margin-bottom:.4rem;}
+  .course-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;margin-bottom:.5rem;}
+  .course-meta{font-size:.78rem;color:var(--muted);line-height:1.5;}
+  .course-meta span{display:block;}
 
-  /* ── ABOUT ── */
-  #about { background: var(--card); }
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 6rem;
-    align-items: start;
-  }
-  .about-text p {
-    font-size: .95rem;
-    color: var(--muted);
-    line-height: 1.85;
-    margin-bottom: 1.2rem;
-  }
-  .about-text p strong { color: var(--ink); font-weight: 500; }
-  .interests-list {
-    margin-top: 2rem;
-    display: flex; flex-direction: column; gap: .5rem;
-  }
-  .interest-item {
-    display: flex; align-items: center; gap: .8rem;
-    font-size: .85rem;
-    color: var(--muted);
-  }
-  .interest-item::before {
-    content: '▸';
-    color: var(--gold);
-    font-size: .7rem;
-    flex-shrink: 0;
-  }
-  .edu-timeline { display: flex; flex-direction: column; gap: 1.6rem; }
-  .edu-item {
-    border-left: 1px solid var(--rule);
-    padding-left: 1.2rem;
-    position: relative;
-  }
-  .edu-item::before {
-    content: '';
-    position: absolute; left: -4px; top: 6px;
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--gold);
-  }
-  .edu-year {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .1em;
-    color: var(--gold);
-    margin-bottom: .2rem;
-  }
-  .edu-degree {
-    font-weight: 500;
-    font-size: .9rem;
-    margin-bottom: .1rem;
-  }
-  .edu-school {
-    font-size: .82rem;
-    color: var(--muted);
-  }
+  /* CV */
+  #cv{background:var(--cream);}
+  .cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;}
+  .cv-items{display:flex;flex-direction:column;gap:1.2rem;}
+  .cv-item-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.2rem;}
+  .cv-item-title{font-weight:500;font-size:.9rem;}
+  .cv-item-date{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);white-space:nowrap;}
+  .cv-item-sub{font-size:.8rem;color:var(--muted);}
+  .cv-download{text-align:center;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--rule);}
+  .cv-download p{font-size:.88rem;color:var(--muted);margin-bottom:1.2rem;}
 
-  /* ── PUBLICATIONS ── */
-  #publications { background: var(--cream); }
-  .pub-filter {
-    display: flex; gap: .5rem; flex-wrap: wrap;
-    margin-bottom: 2.5rem;
-  }
-  .filter-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .4rem 1rem;
-    border: 1px solid var(--rule);
-    background: var(--card);
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .2s;
-    border-radius: 2px;
-  }
-  .filter-btn.active, .filter-btn:hover {
-    background: var(--ink);
-    color: var(--cream);
-    border-color: var(--ink);
-  }
-  .pub-list { display: flex; flex-direction: column; gap: 1px; }
-  .pub-item {
-    background: var(--card);
-    padding: 1.6rem 2rem;
-    border-left: 3px solid transparent;
-    transition: border-color .2s, transform .15s;
-    position: relative;
-  }
-  .pub-item:hover {
-    border-left-color: var(--gold);
-    transform: translateX(3px);
-  }
-  .pub-meta {
-    display: flex; align-items: center; gap: .8rem;
-    margin-bottom: .5rem;
-  }
-  .pub-type {
-    font-family: 'DM Mono', monospace;
-    font-size: .62rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .15rem .5rem;
-    border-radius: 2px;
-    font-weight: 400;
-  }
-  .pub-type.a1 { background: #e8f0e0; color: #3a6020; }
-  .pub-type.a2 { background: #e0e8f4; color: #20406a; }
-  .pub-type.book { background: #f0e8e0; color: #6a4020; }
-  .pub-type.other { background: #f0f0f0; color: #555; }
-  .pub-year {
-    font-family: 'DM Mono', monospace;
-    font-size: .7rem;
-    color: var(--muted);
-  }
-  .pub-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-weight: 400;
-    line-height: 1.4;
-    margin-bottom: .4rem;
-    color: var(--ink);
-  }
-  .pub-authors {
-    font-size: .78rem;
-    color: var(--muted);
-    margin-bottom: .3rem;
-  }
-  .pub-authors strong { color: var(--ink); font-weight: 500; }
-  .pub-journal {
-    font-size: .8rem;
-    font-style: italic;
-    color: var(--accent);
-  }
-  .pub-doi {
-    font-size: .72rem;
-    color: var(--gold);
-    text-decoration: none;
-    font-family: 'DM Mono', monospace;
-  }
-  .pub-doi:hover { text-decoration: underline; }
+  /* CONTACT */
+  #contact{background:var(--ink);color:var(--cream);}
+  #contact .section-label{color:var(--gold-lt);}
+  #contact .section-title{color:var(--cream);}
+  .contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:6rem;align-items:start;}
+  .contact-text{font-size:.95rem;color:rgba(245,240,232,.65);line-height:1.85;margin-bottom:2rem;}
+  .contact-links{display:flex;flex-direction:column;gap:1rem;}
+  .contact-link{display:flex;align-items:center;gap:1rem;font-size:.85rem;color:rgba(245,240,232,.7);text-decoration:none;transition:color .2s;}
+  .contact-link:hover{color:var(--gold-lt);}
+  .contact-link-icon{width:36px;height:36px;border:1px solid rgba(245,240,232,.2);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-family:'DM Mono',monospace;color:var(--gold-lt);flex-shrink:0;transition:border-color .2s;}
+  .contact-link:hover .contact-link-icon{border-color:var(--gold-lt);}
 
-  /* ── TEACHING ── */
-  #teaching { background: var(--card); }
-  .teaching-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-  }
-  .course-card {
-    border: 1px solid var(--rule);
-    padding: 1.8rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color .2s;
-  }
-  .course-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform .3s;
-  }
-  .course-card:hover::before { transform: scaleX(1); }
-  .course-card:hover { border-color: var(--gold-lt); }
-  .course-code {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .1em;
-    color: var(--gold);
-    margin-bottom: .4rem;
-  }
-  .course-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-weight: 400;
-    margin-bottom: .5rem;
-  }
-  .course-meta {
-    font-size: .78rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-  .course-meta span {
-    display: block;
-  }
+  /* FOOTER */
+  footer{background:var(--ink);border-top:1px solid rgba(245,240,232,.08);padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;}
+  footer p{font-size:.72rem;color:rgba(245,240,232,.35);font-family:'DM Mono',monospace;}
 
-  /* ── CV ── */
-  #cv { background: var(--cream); }
-  .cv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
-  .cv-section-title {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1.2rem;
-    padding-bottom: .5rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .cv-items { display: flex; flex-direction: column; gap: 1.2rem; }
-  .cv-item {}
-  .cv-item-header {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: .2rem;
-  }
-  .cv-item-title {
-    font-weight: 500;
-    font-size: .9rem;
-  }
-  .cv-item-date {
-    font-family: 'DM Mono', monospace;
-    font-size: .65rem;
-    color: var(--gold);
-    white-space: nowrap;
-  }
-  .cv-item-sub {
-    font-size: .8rem;
-    color: var(--muted);
-  }
-  .cv-download {
-    text-align: center;
-    margin-top: 4rem;
-    padding-top: 3rem;
-    border-top: 1px solid var(--rule);
-  }
-  .cv-download p {
-    font-size: .88rem;
-    color: var(--muted);
-    margin-bottom: 1.2rem;
-  }
+  /* ANIMATIONS */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+  .hero-left > *{opacity:0;animation:fadeUp .7s ease forwards;}
+  .hero-tag{animation-delay:.1s;}.hero-name{animation-delay:.25s;}.hero-desc{animation-delay:.4s;}
+  .hero-badges{animation-delay:.5s;}.hero-cta{animation-delay:.6s;}
+  .hero-right{opacity:0;animation:fadeUp .7s ease .5s forwards;}
 
-  /* ── CONTACT ── */
-  #contact {
-    background: var(--ink);
-    color: var(--cream);
-  }
-  #contact .section-label { color: var(--gold-lt); }
-  #contact .section-title { color: var(--cream); }
-  .contact-grid {
-    display: grid; grid-template-columns: 1.2fr 1fr; gap: 6rem;
-    align-items: start;
-  }
-  .contact-text {
-    font-size: .95rem;
-    color: rgba(245,240,232,.65);
-    line-height: 1.85;
-    margin-bottom: 2rem;
-  }
-  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
-  .contact-link {
-    display: flex; align-items: center; gap: 1rem;
-    font-size: .85rem;
-    color: rgba(245,240,232,.7);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .contact-link:hover { color: var(--gold-lt); }
-  .contact-link-icon {
-    width: 36px; height: 36px;
-    border: 1px solid rgba(245,240,232,.2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: .75rem;
-    font-family: 'DM Mono', monospace;
-    color: var(--gold-lt);
-    flex-shrink: 0;
-    transition: border-color .2s;
-  }
-  .contact-link:hover .contact-link-icon { border-color: var(--gold-lt); }
+  /* HAMBURGER */
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:all .3s;}
+  .hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+  .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(245,240,232,0.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);z-index:99;padding:1.5rem 2rem;flex-direction:column;gap:0;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{font-size:.9rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:.9rem 0;border-bottom:1px solid var(--rule);transition:color .2s;display:block;}
+  .mobile-menu a:last-of-type{border-bottom:none;}
+  .mobile-menu a:hover{color:var(--gold);}
+  .mobile-lang{display:flex;gap:8px;padding-top:1rem;}
+  .mobile-lang button{font-family:'DM Mono',monospace;font-size:.72rem;padding:.4rem .9rem;border:1px solid var(--rule);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;}
+  .mobile-lang button.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
 
-  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
-  .form-group { display: flex; flex-direction: column; gap: .4rem; }
-  .form-label {
-    font-family: 'DM Mono', monospace;
-    font-size: .65rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: rgba(245,240,232,.5);
+  /* RESPONSIVE */
+  @media (max-width:900px){
+    nav{padding:0 1.5rem;}
+    .nav-links{display:none;}
+    .nav-right{gap:.8rem;}
+    .hamburger{display:flex;}
+    .lang-switch{display:none;}
+    #hero{grid-template-columns:1fr;min-height:auto;}
+    .hero-left::after{display:none;}
+    .hero-left{padding:3rem 1.5rem 2rem;}
+    .hero-right{padding:1.5rem 1.5rem 3rem;}
+    .hero-name{font-size:clamp(2.5rem,10vw,4rem);}
+    .stat-grid{gap:1.2rem;}
+    .stat-num{font-size:2.5rem;}
+    .about-grid,.cv-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem;}
+    .teaching-grid{grid-template-columns:1fr;}
+    .container{padding:0 1.5rem;}
+    section{padding:3rem 0;}
+    .pub-item{flex-direction:column;align-items:flex-start;padding:1.2rem 1.5rem;}
+    .pub-actions{flex-direction:row;align-self:stretch;}
+    .pub-filter{gap:.4rem;}
+    .filter-btn{font-size:.62rem;padding:.35rem .7rem;}
+    .hero-cta{flex-direction:column;gap:.8rem;}
+    .btn-primary,.btn-outline{text-align:center;}
+    footer{padding:1.5rem;flex-direction:column;gap:.5rem;text-align:center;}
+    .section-title{margin-bottom:2rem;}
+    .course-card{padding:1.4rem;}
   }
-  .form-input, .form-textarea {
-    background: rgba(245,240,232,.06);
-    border: 1px solid rgba(245,240,232,.15);
-    color: var(--cream);
-    padding: .75rem 1rem;
-    font-family: 'Outfit', sans-serif;
-    font-size: .88rem;
-    outline: none;
-    transition: border-color .2s;
-    resize: none;
-  }
-  .form-input::placeholder, .form-textarea::placeholder { color: rgba(245,240,232,.3); }
-  .form-input:focus, .form-textarea:focus { border-color: var(--gold); }
-  .form-textarea { min-height: 120px; }
-  .btn-send {
-    font-size: .78rem;
-    font-weight: 500;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: .9rem 2rem;
-    background: var(--gold);
-    color: var(--ink);
-    border: none;
-    cursor: pointer;
-    align-self: flex-start;
-    transition: background .2s;
-    font-family: 'Outfit', sans-serif;
-  }
-  .btn-send:hover { background: var(--gold-lt); }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--ink);
-    border-top: 1px solid rgba(245,240,232,.08);
-    padding: 2rem 4rem;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  footer p {
-    font-size: .72rem;
-    color: rgba(245,240,232,.35);
-    font-family: 'DM Mono', monospace;
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .hero-left > * { opacity: 0; animation: fadeUp .7s ease forwards; }
-  .hero-tag    { animation-delay: .1s; }
-  .hero-name   { animation-delay: .25s; }
-  .hero-desc   { animation-delay: .4s; }
-  .hero-badges { animation-delay: .5s; }
-  .hero-cta    { animation-delay: .6s; }
-  .hero-right  { opacity: 0; animation: fadeUp .7s ease .5s forwards; }
-
-  .pub-item { opacity: 0; transform: translateX(-10px); transition: opacity .4s, transform .4s; }
-  .pub-item.visible { opacity: 1; transform: translateX(0); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    nav { padding: 0 1.5rem; }
-    .nav-links { gap: 1.2rem; }
-    #hero { grid-template-columns: 1fr; }
-    .hero-left::after { display: none; }
-    .hero-left { padding: 4rem 2rem 2rem; }
-    .hero-right { padding: 2rem 2rem 4rem; }
-    .about-grid, .cv-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .teaching-grid { grid-template-columns: 1fr; }
-    .container { padding: 0 2rem; }
-    section { padding: 4rem 0; }
+  @media (max-width:480px){
+    .badge{font-size:.62rem;padding:.25rem .6rem;}
+    .stat-grid{grid-template-columns:1fr 1fr;}
   }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ─────────────────────────────────────────────────────────────────── -->
 <nav>
   <a class="nav-logo" href="#hero">Erman Ermihan</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#teaching">Teaching</a></li>
-    <li><a href="#cv">CV</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about" data-en="About" data-tr="Hakkımda">About</a></li>
+      <li><a href="#publications" data-en="Publications" data-tr="Yayınlar">Publications</a></li>
+      <li><a href="#teaching" data-en="Teaching" data-tr="Dersler">Teaching</a></li>
+      <li><a href="#cv" data-en="CV" data-tr="Özgeçmiş">CV</a></li>
+      <li><a href="#contact" data-en="Contact" data-tr="İletişim">Contact</a></li>
+    </ul>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('tr',this)">TR</button>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
-<!-- ── HERO ─────────────────────────────────────────────────────────────────── -->
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" onclick="closeMenu()" data-en="About" data-tr="Hakkımda">About</a>
+  <a href="#publications" onclick="closeMenu()" data-en="Publications" data-tr="Yayınlar">Publications</a>
+  <a href="#teaching" onclick="closeMenu()" data-en="Teaching" data-tr="Dersler">Teaching</a>
+  <a href="#cv" onclick="closeMenu()" data-en="CV" data-tr="Özgeçmiş">CV</a>
+  <a href="#contact" onclick="closeMenu()" data-en="Contact" data-tr="İletişim">Contact</a>
+  <div class="mobile-lang">
+    <button class="active" id="mob-en" onclick="setLang('en',this);syncMobileLang('en')">EN</button>
+    <button id="mob-tr" onclick="setLang('tr',this);syncMobileLang('tr')">TR</button>
+  </div>
+</div>
+
+<!-- HERO -->
 <section id="hero">
   <div class="hero-left">
-    <div class="hero-tag">Postdoctoral Researcher · Bilkent University</div>
+    <div class="hero-tag" data-en="Postdoctoral Researcher · Bilkent University" data-tr="Doktora Sonrası Araştırmacı · Bilkent Üniversitesi">Postdoctoral Researcher · Bilkent University</div>
     <h1 class="hero-name">Erman<br><em>Ermihan</em></h1>
-    <p class="hero-desc">
+    <p class="hero-desc"
+       data-en="Exploring the affective dimensions of foreign policy — where emotions, identity, and ontological security shape how states and leaders navigate an uncertain world."
+       data-tr="Dış politikanın duygusal boyutları üzerine çalışıyorum — duygular, kimlik ve ontolojik güvenlik kaygılarının devletlerin ve liderlerin belirsiz dünyada nasıl yön bulduğunu nasıl şekillendirdiği üzerine.">
       Exploring the affective dimensions of foreign policy — where emotions, identity, and ontological security shape how states and leaders navigate an uncertain world.
     </p>
     <div class="hero-badges">
-      <span class="badge">Ontological Security</span>
-      <span class="badge">Emotions in IR</span>
-      <span class="badge">Turkish Foreign Policy</span>
-      <span class="badge">EU–Turkey Relations</span>
-      <span class="badge">Populism</span>
+      <span class="badge" data-en="Ontological Security" data-tr="Ontolojik Güvenlik">Ontological Security</span>
+      <span class="badge" data-en="Emotions in IR" data-tr="Uİ'de Duygular">Emotions in IR</span>
+      <span class="badge" data-en="Turkish Foreign Policy" data-tr="Türk Dış Politikası">Turkish Foreign Policy</span>
+      <span class="badge" data-en="EU–Turkey Relations" data-tr="AB–Türkiye İlişkileri">EU–Turkey Relations</span>
+      <span class="badge" data-en="Populism" data-tr="Popülizm">Populism</span>
     </div>
     <div class="hero-cta">
-      <a class="btn-primary" href="#publications">View Publications</a>
-      <a class="btn-outline" href="#contact">Get in Touch</a>
+      <a class="btn-primary" href="#publications" data-en="View Publications" data-tr="Yayınları Gör">View Publications</a>
+      <a class="btn-outline" href="#contact" data-en="Get in Touch" data-tr="İletişim">Get in Touch</a>
     </div>
   </div>
   <div class="hero-right">
     <div class="stat-grid">
-      <div class="stat-item">
-        <div class="stat-num">10+</div>
-        <div class="stat-label">Peer-reviewed<br>publications</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">17</div>
-        <div class="stat-label">International<br>conference papers</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">4</div>
-        <div class="stat-label">Courses<br>taught</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-num">2025</div>
-        <div class="stat-label">PhD<br>completed</div>
-      </div>
+      <div><div class="stat-num">10+</div><div class="stat-label" data-en="Peer-reviewed publications" data-tr="Hakemli yayın">Peer-reviewed publications</div></div>
+      <div><div class="stat-num">17</div><div class="stat-label" data-en="International conference papers" data-tr="Uluslararası bildiri">International conference papers</div></div>
+      <div><div class="stat-num">4</div><div class="stat-label" data-en="Courses taught" data-tr="Verilen ders">Courses taught</div></div>
+      <div><div class="stat-num">2025</div><div class="stat-label" data-en="PhD completed" data-tr="Doktora">PhD completed</div></div>
     </div>
     <div class="affil-block">
-      <p><strong>Great Realignment Project</strong><br>
-      Carnegie Corporation of New York<br>
-      with Assoc. Prof. Efe Tokdemir</p>
+      <p data-en="<strong>Great Realignment Project</strong><br>Carnegie Corporation of New York<br>with Assoc. Prof. Efe Tokdemir"
+         data-tr="<strong>Great Realignment Projesi</strong><br>Carnegie Corporation of New York<br>Doç. Dr. Efe Tokdemir ile birlikte">
+        <strong>Great Realignment Project</strong><br>Carnegie Corporation of New York<br>with Assoc. Prof. Efe Tokdemir
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ── ABOUT ─────────────────────────────────────────────────────────────────── -->
+<!-- ABOUT -->
 <section id="about">
   <div class="container">
-    <div class="section-label">01 / About</div>
-    <h2 class="section-title">Scholarship at the<br>intersection of affect and power</h2>
+    <div class="section-label" data-en="01 / About" data-tr="01 / Hakkımda">01 / About</div>
+    <h2 class="section-title"
+        data-en="Scholarship at the<br>intersection of affect and power"
+        data-tr="Duygunun ve gücün<br>kesişiminde akademik çalışma">Scholarship at the<br>intersection of affect and power</h2>
     <div class="about-grid">
       <div class="about-text">
-        <p>
-          I am a postdoctoral researcher at <strong>Bilkent University's Department of International Relations</strong>, working on the Carnegie Corporation-funded <em>Great Realignment: Small-State Statecraft and the Global Order</em> project alongside Assoc. Prof. Efe Tokdemir. I also serve as a Visiting Lecturer, currently teaching IR 236: 20th Century World Politics.
-        </p>
-        <p>
-          My research sits at the intersection of political psychology, critical security studies, and foreign policy analysis. I investigate how <strong>emotions, ontological security needs, and identity narratives</strong> inform state behaviour — with a particular focus on Turkey's evolving relationship with the European Union and the West under the AKP era.
-        </p>
-        <p>
-          My work has appeared in journals including <em>Third World Quarterly</em>, <em>Journal of European Integration</em>, <em>Turkish Studies</em>, <em>Critical Studies on Security</em>, and <em>Globalizations</em>, among others. I hold a PhD from Kadir Has University (2025), an MA from Sabancı University, and a BA from Istanbul Bilgi University.
-        </p>
+        <div data-en="<p>I am a postdoctoral researcher at <strong>Bilkent University's Department of International Relations</strong>, working on the Carnegie Corporation-funded <em>Great Realignment: Small-State Statecraft and the Global Order</em> project alongside Assoc. Prof. Efe Tokdemir. I also serve as a Visiting Lecturer, currently teaching IR 236: 20th Century World Politics.</p><p>My research sits at the intersection of political psychology, critical security studies, and foreign policy analysis. I investigate how <strong>emotions, ontological security needs, and identity narratives</strong> inform state behaviour — with a particular focus on Turkey's evolving relationship with the European Union and the West under the AKP era.</p><p>My work has appeared in journals including <em>Third World Quarterly</em>, <em>Journal of European Integration</em>, <em>Turkish Studies</em>, <em>Critical Studies on Security</em>, and <em>Globalizations</em>, among others. I hold a PhD from Kadir Has University (2025), an MA from Sabancı University, and a BA from Istanbul Bilgi University.</p>"
+             data-tr="<p><strong>Bilkent Üniversitesi Uluslararası İlişkiler Bölümü</strong>'nde doktora sonrası araştırmacıyım; Doç. Dr. Efe Tokdemir ile birlikte Carnegie Corporation tarafından desteklenen <em>Great Realignment: Small-State Statecraft and the Global Order</em> projesinde çalışıyorum. Aynı zamanda misafir öğretim görevlisi olarak IR 236: 20. Yüzyıl Dünya Siyaseti dersini veriyorum.</p><p>Araştırmalarım siyaset psikolojisi, eleştirel güvenlik çalışmaları ve dış politika analizinin kesişiminde yer alıyor. <strong>Duyguların, ontolojik güvenlik kaygılarının ve kimlik anlatılarının</strong> devlet davranışını nasıl şekillendirdiğini inceliyorum — özellikle Türkiye'nin AKP dönemindeki Avrupa Birliği ve Batı ile ilişkileri üzerinden.</p><p>Çalışmalarım <em>Third World Quarterly</em>, <em>Journal of European Integration</em>, <em>Turkish Studies</em>, <em>Critical Studies on Security</em> ve <em>Globalizations</em> gibi dergilerde yayımlandı. Doktoramı Kadir Has Üniversitesi'nde (2025), yüksek lisansımı Sabancı Üniversitesi'nde, lisansımı İstanbul Bilgi Üniversitesi'nde tamamladım.</p>">
+        </div>
         <div class="interests-list">
-          <div class="interest-item">Ontological Security Theory</div>
-          <div class="interest-item">Emotions and Affect in International Relations</div>
-          <div class="interest-item">Turkish Foreign Policy and De-Europeanization</div>
-          <div class="interest-item">EU–Turkey Relations</div>
-          <div class="interest-item">Populism and Political Psychology</div>
-          <div class="interest-item">Foreign Policy Analysis</div>
+          <div class="interest-item" data-en="Ontological Security Theory" data-tr="Ontolojik Güvenlik Teorisi">Ontological Security Theory</div>
+          <div class="interest-item" data-en="Emotions and Affect in International Relations" data-tr="Uluslararası İlişkilerde Duygular">Emotions and Affect in International Relations</div>
+          <div class="interest-item" data-en="Turkish Foreign Policy and De-Europeanization" data-tr="Türk Dış Politikası ve De-Avrupalılaşma">Turkish Foreign Policy and De-Europeanization</div>
+          <div class="interest-item" data-en="EU–Turkey Relations" data-tr="AB–Türkiye İlişkileri">EU–Turkey Relations</div>
+          <div class="interest-item" data-en="Populism and Political Psychology" data-tr="Popülizm ve Siyaset Psikolojisi">Populism and Political Psychology</div>
+          <div class="interest-item" data-en="Foreign Policy Analysis" data-tr="Dış Politika Analizi">Foreign Policy Analysis</div>
         </div>
       </div>
       <div>
-        <div class="cv-section-title">Education</div>
+        <div class="cv-section-title" data-en="Education" data-tr="Eğitim">Education</div>
         <div class="edu-timeline">
-          <div class="edu-item">
-            <div class="edu-year">2019 – 2025</div>
-            <div class="edu-degree">PhD, International Relations</div>
-            <div class="edu-school">Kadir Has University, Istanbul · GPA 3.94 · Full Scholarship</div>
-          </div>
-          <div class="edu-item">
-            <div class="edu-year">2017 – 2019</div>
-            <div class="edu-degree">MA, Political Science</div>
-            <div class="edu-school">Sabancı University, Istanbul · GPA 3.36 · Full Scholarship</div>
-          </div>
-          <div class="edu-item">
-            <div class="edu-year">Feb – Jun 2016</div>
-            <div class="edu-degree">Erasmus+ Exchange</div>
-            <div class="edu-school">Mannheim University, Germany</div>
-          </div>
-          <div class="edu-item">
-            <div class="edu-year">2013 – 2017</div>
-            <div class="edu-degree">BA, International Relations</div>
-            <div class="edu-school">Istanbul Bilgi University · GPA 3.74 · 75% Scholarship</div>
-          </div>
+          <div class="edu-item"><div class="edu-year">2019 – 2025</div>
+            <div class="edu-degree" data-en="PhD, International Relations" data-tr="Doktora, Uluslararası İlişkiler">PhD, International Relations</div>
+            <div class="edu-school" data-en="Kadir Has University · GPA 3.94 · Full Scholarship" data-tr="Kadir Has Üniversitesi · GPA 3.94 · Tam Burs">Kadir Has University · GPA 3.94 · Full Scholarship</div></div>
+          <div class="edu-item"><div class="edu-year">2017 – 2019</div>
+            <div class="edu-degree" data-en="MA, Political Science" data-tr="Yüksek Lisans, Siyaset Bilimi">MA, Political Science</div>
+            <div class="edu-school" data-en="Sabancı University · GPA 3.36 · Full Scholarship" data-tr="Sabancı Üniversitesi · GPA 3.36 · Tam Burs">Sabancı University · GPA 3.36 · Full Scholarship</div></div>
+          <div class="edu-item"><div class="edu-year" data-en="Feb – Jun 2016" data-tr="Şub – Haz 2016">Feb – Jun 2016</div>
+            <div class="edu-degree" data-en="Erasmus+ Exchange" data-tr="Erasmus+ Değişim">Erasmus+ Exchange</div>
+            <div class="edu-school" data-en="Mannheim University, Germany" data-tr="Mannheim Üniversitesi, Almanya">Mannheim University, Germany</div></div>
+          <div class="edu-item"><div class="edu-year">2013 – 2017</div>
+            <div class="edu-degree" data-en="BA, International Relations" data-tr="Lisans, Uluslararası İlişkiler">BA, International Relations</div>
+            <div class="edu-school" data-en="Istanbul Bilgi University · GPA 3.74 · 75% Scholarship" data-tr="İstanbul Bilgi Üniversitesi · GPA 3.74 · %75 Burs">Istanbul Bilgi University · GPA 3.74 · 75% Scholarship</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── PUBLICATIONS ───────────────────────────────────────────────────────────── -->
+<!-- PUBLICATIONS -->
 <section id="publications">
   <div class="container">
-    <div class="section-label">02 / Publications</div>
-    <h2 class="section-title">Selected works</h2>
+    <div class="section-label" data-en="02 / Publications" data-tr="02 / Yayınlar">02 / Publications</div>
+    <h2 class="section-title" data-en="Selected works" data-tr="Seçilmiş çalışmalar">Selected works</h2>
     <div class="pub-filter">
-      <button class="filter-btn active" onclick="filterPubs('all', this)">All</button>
-      <button class="filter-btn" onclick="filterPubs('a1', this)">SSCI Journals</button>
-      <button class="filter-btn" onclick="filterPubs('a2', this)">Int'l Journals</button>
-      <button class="filter-btn" onclick="filterPubs('book', this)">Book Chapters</button>
-      <button class="filter-btn" onclick="filterPubs('other', this)">Other</button>
+      <button class="filter-btn active" onclick="filterPubs('all',this)" data-en="All" data-tr="Tümü">All</button>
+      <button class="filter-btn" onclick="filterPubs('a1',this)" data-en="SSCI Journals" data-tr="SSCI Dergileri">SSCI Journals</button>
+      <button class="filter-btn" onclick="filterPubs('a2',this)" data-en="Int'l Journals" data-tr="Uluslararası">Int'l Journals</button>
+      <button class="filter-btn" onclick="filterPubs('book',this)" data-en="Book Chapters" data-tr="Kitap Bölümleri">Book Chapters</button>
+      <button class="filter-btn" onclick="filterPubs('other',this)" data-en="Other" data-tr="Diğer">Other</button>
     </div>
     <div class="pub-list" id="pubList">
 
       <div class="pub-item" data-cat="a1">
-        <div class="pub-meta">
-          <span class="pub-type a1">SSCI</span>
-          <span class="pub-year">2026</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2026</span></div>
+          <div class="pub-title">"From sacred spaces to imperial glory: a deconstruction of civilizational discourses in Türkiye and Saudi Arabia"</div>
+          <div class="pub-authors">Lacin Idil Oztig & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Globalizations</div>
         </div>
-        <div class="pub-title">"From sacred spaces to imperial glory: a deconstruction of civilizational discourses in Türkiye and Saudi Arabia"</div>
-        <div class="pub-authors">Lacin Idil Oztig & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Globalizations</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.tandfonline.com/doi/full/10.1080/14747731.2026.2658907" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a1">
-        <div class="pub-meta">
-          <span class="pub-type a1">SSCI</span>
-          <span class="pub-year">2026</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2026</span></div>
+          <div class="pub-title">"The Abject Other in Turkish Politics: Populist Securitization, Affect, and the Victory Party"</div>
+          <div class="pub-authors">Ceren Melis Kıcıroğlu, <strong>Erman Ermihan</strong> & Umut Can Adışönmez</div>
+          <div class="pub-journal">Southeast European and Black Sea Studies</div>
         </div>
-        <div class="pub-title">"The Abject Other in Turkish Politics: Populist Securitization, Affect, and the Victory Party"</div>
-        <div class="pub-authors">Ceren Melis Kıcıroğlu, <strong>Erman Ermihan</strong> & Umut Can Adışönmez</div>
-        <div class="pub-journal">Southeast European and Black Sea Studies</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.tandfonline.com/doi/full/10.1080/14683857.2025.2611725" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a1">
-        <div class="pub-meta">
-          <span class="pub-type a1">SSCI</span>
-          <span class="pub-year">2026</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2026</span></div>
+          <div class="pub-title">"The affective economy of aid: narcissistic security and the making of Türkiye's moral self"</div>
+          <div class="pub-authors">Ceren Melis Kıcıroğlu & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Third World Quarterly</div>
         </div>
-        <div class="pub-title">"The affective economy of aid: narcissistic security and the making of Türkiye's moral self"</div>
-        <div class="pub-authors">Ceren Melis Kıcıroğlu & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Third World Quarterly</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.tandfonline.com/doi/full/10.1080/01436597.2026.2631775" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a1">
-        <div class="pub-meta">
-          <span class="pub-type a1">SSCI</span>
-          <span class="pub-year">2025</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2025</span></div>
+          <div class="pub-title">"Causal Mechanisms of Ontological (In)Security in Turkish Politics and Foreign Policy: Anxiety Transmittance from Sèvres to Lausanne"</div>
+          <div class="pub-authors"><strong>Erman Ermihan</strong> & İrem Karamık</div>
+          <div class="pub-journal">Turkish Studies</div>
         </div>
-        <div class="pub-title">"Causal Mechanisms of Ontological (In)Security in Turkish Politics and Foreign Policy: Anxiety Transmittance from Sèvres to Lausanne"</div>
-        <div class="pub-authors"><strong>Erman Ermihan</strong> & İrem Karamık</div>
-        <div class="pub-journal">Turkish Studies</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.tandfonline.com/doi/full/10.1080/14683849.2025.2461083" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a1">
-        <div class="pub-meta">
-          <span class="pub-type a1">SSCI</span>
-          <span class="pub-year">2024</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2024</span></div>
+          <div class="pub-title">"The Self and the Other: Individual Emotions and Ontological Security in Turkish Foreign Policy"</div>
+          <div class="pub-authors">Nasuh Sofuoğlu, Samer Sharani & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Alternatives: Global, Local, Political</div>
         </div>
-        <div class="pub-title">"The Self and the Other: Individual Emotions and Ontological Security in Turkish Foreign Policy"</div>
-        <div class="pub-authors">Nasuh Sofuoğlu, Samer Sharani & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Alternatives: Global, Local, Political</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://journals.sagepub.com/doi/abs/10.1177/03043754241291121" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a1">
-        <div class="pub-meta">
-          <span class="pub-type a1">SSCI</span>
-          <span class="pub-year">2024</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2024</span></div>
+          <div class="pub-title">"Emotions and norms in the Syrian refugee crisis: the comparative responses of the EU and Turkey"</div>
+          <div class="pub-authors"><strong>Erman Ermihan</strong> & Sinem Akgül Açıkmeşe</div>
+          <div class="pub-journal">Journal of European Integration</div>
         </div>
-        <div class="pub-title">"Emotions and norms in the Syrian refugee crisis: the comparative responses of the EU and Turkey"</div>
-        <div class="pub-authors"><strong>Erman Ermihan</strong> & Sinem Akgül Açıkmeşe</div>
-        <div class="pub-journal">Journal of European Integration</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.tandfonline.com/doi/full/10.1080/07036337.2024.2365993" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a2">
-        <div class="pub-meta">
-          <span class="pub-type a2">Int'l</span>
-          <span class="pub-year">2024</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a2">Int'l</span><span class="pub-year">2024</span></div>
+          <div class="pub-title">"End of jouissance, start of resentment: a Lacanian critical security approach to Turkey's relations with the West"</div>
+          <div class="pub-authors"><strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Critical Studies on Security</div>
         </div>
-        <div class="pub-title">"End of jouissance, start of resentment: a Lacanian critical security approach to Turkey's relations with the West"</div>
-        <div class="pub-authors"><strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Critical Studies on Security</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.tandfonline.com/doi/full/10.1080/21624887.2024.2312317" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a2">
-        <div class="pub-meta">
-          <span class="pub-type a2">Int'l</span>
-          <span class="pub-year">2023</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a2">Int'l</span><span class="pub-year">2023</span></div>
+          <div class="pub-title">"Quo Vadis, Turkish IR? Mapping Turkish IR's Footsteps within the Global"</div>
+          <div class="pub-authors">İrem Karamık & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">All Azimuth, 12(2): 241–260</div>
         </div>
-        <div class="pub-title">"Quo Vadis, Turkish IR? Mapping Turkish IR's Footsteps within the Global"</div>
-        <div class="pub-authors">İrem Karamık & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">All Azimuth, 12(2): 241–260</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://dergipark.org.tr/tr/pub/allazimuth/issue/78005/1310640" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="a2">
-        <div class="pub-meta">
-          <span class="pub-type a2">Int'l</span>
-          <span class="pub-year">2023</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type a2">Int'l</span><span class="pub-year">2023</span></div>
+          <div class="pub-title">"Feeling Imagined Spaces: Emotional Geographies in the EU–Turkey Relations"</div>
+          <div class="pub-authors">İrem Karamık & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Uluslararası İlişkiler, 20(77): 71–88</div>
         </div>
-        <div class="pub-title">"Feeling Imagined Spaces: Emotional Geographies in the EU–Turkey Relations"</div>
-        <div class="pub-authors">İrem Karamık & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Uluslararası İlişkiler, 20(77): 71–88</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.uidergisi.com.tr/yazilar/feeling-imagined-spaces-emotional-geographies-in-the-eu-turkey-relations-irem-karamik-and-erman-ermihan" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="book">
-        <div class="pub-meta">
-          <span class="pub-type book">Chapter</span>
-          <span class="pub-year">2025</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type book" data-en="Chapter" data-tr="Bölüm">Chapter</span><span class="pub-year">2025</span></div>
+          <div class="pub-title">"Turkey" — The Palgrave Geopolitical Atlas: State and Quasi-State Actors in Great Power Competition</div>
+          <div class="pub-authors">Ceren Melis Kıcıroğlu, <strong>Erman Ermihan</strong> & Nuri Fudayl Kıcıroğlu</div>
+          <div class="pub-journal">Palgrave Macmillan, pp. 193–208</div>
         </div>
-        <div class="pub-title">"Turkey" — The Palgrave Geopolitical Atlas: State and Quasi-State Actors in Great Power Competition</div>
-        <div class="pub-authors">Ceren Melis Kıcıroğlu, <strong>Erman Ermihan</strong> & Nuri Fudayl Kıcıroğlu</div>
-        <div class="pub-journal">Palgrave Macmillan, pp. 193–208</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://doi.org/10.1007/978-981-95-1507-3" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="book">
-        <div class="pub-meta">
-          <span class="pub-type book">Chapter</span>
-          <span class="pub-year">2026</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type book" data-en="Chapter" data-tr="Bölüm">Chapter</span><span class="pub-year">2026</span></div>
+          <div class="pub-title">"Politik Psikoloji: Duygular, Ontolojik Güvenlik ve Popülizmin Kesişimi"</div>
+          <div class="pub-authors">Veli Özdemir & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Uluslararası İlişkilere Giriş — Orion Yayınları</div>
         </div>
-        <div class="pub-title">"Politik Psikoloji: Duygular, Ontolojik Güvenlik ve Popülizmin Kesişimi"</div>
-        <div class="pub-authors">Veli Özdemir & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Uluslararası İlişkilere Giriş — Orion Yayınları</div>
+        <div class="pub-actions">
+          <a class="pub-link secondary" href="https://www.orionyayinlari.com" target="_blank" rel="noopener" data-en="Publisher" data-tr="Yayınevi">Publisher</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="book">
-        <div class="pub-meta">
-          <span class="pub-type book">Chapter</span>
-          <span class="pub-year">2023</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type book" data-en="Chapter" data-tr="Bölüm">Chapter</span><span class="pub-year">2023</span></div>
+          <div class="pub-title">"Türkiye'de Güvenlik Çalışmaları"</div>
+          <div class="pub-authors">Sinem Akgül Açıkmeşe & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Türkiye'de Uluslararası İlişkiler Çalışmaları — İmge Kitabevi</div>
         </div>
-        <div class="pub-title">"Türkiye'de Güvenlik Çalışmaları"</div>
-        <div class="pub-authors">Sinem Akgül Açıkmeşe & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">Türkiye'de Uluslararası İlişkiler Çalışmaları — İmge Kitabevi</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://www.imge.com.tr/kitap/turkiye-de-uluslararasi-iliskiler-calismalari-alt-alanlar-ve-bolgesel-odaklar-a-sevket-ovali-ahmet-kasim-han-9786256455030" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
       <div class="pub-item" data-cat="other">
-        <div class="pub-meta">
-          <span class="pub-type other">Report</span>
-          <span class="pub-year">2026</span>
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type other" data-en="Report" data-tr="Rapor">Report</span><span class="pub-year">2026</span></div>
+          <div class="pub-title">"Ontological Insecurity and Emotional Governance in Turkish Foreign Policy"</div>
+          <div class="pub-authors">Karel Franco Valansi & <strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">GA Reports</div>
         </div>
-        <div class="pub-title">"Ontological Insecurity and Emotional Governance in Turkish Foreign Policy"</div>
-        <div class="pub-authors">Karel Franco Valansi & <strong>Erman Ermihan</strong></div>
-        <div class="pub-journal">GA Reports</div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://shorturl.at/3BDH8" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
+      </div>
+
+      <div class="pub-item" data-cat="other">
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type other" data-en="Blog" data-tr="Blog">Blog</span><span class="pub-year">2025</span></div>
+          <div class="pub-title">"The European Union's Enlargement Dilemma: Is Nihilistic Responsibility the New Normal?"</div>
+          <div class="pub-authors"><strong>Erman Ermihan</strong> & Nasuh Sofuoğlu</div>
+          <div class="pub-journal">EU-VALUES Blog</div>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://eu-values.eu/blog/the-european-unions-enlargement-dilemma-is-nihilistic-responsibility-the-new-normal" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
+      </div>
+
+      <div class="pub-item" data-cat="other">
+        <div class="pub-content">
+          <div class="pub-meta"><span class="pub-type other" data-en="Blog" data-tr="Blog">Blog</span><span class="pub-year">2025</span></div>
+          <div class="pub-title">"AKP Döneminde Türkiye-AB İlişkileri: Duygular ve Dış Politika"</div>
+          <div class="pub-authors"><strong>Erman Ermihan</strong></div>
+          <div class="pub-journal">Global Panorama</div>
+        </div>
+        <div class="pub-actions">
+          <a class="pub-link" href="https://globalpanorama.org/2025/10/akp-doneminde-turkiye-ab-iliskileri-duygular-ve-dis-politika-erman-ermihan/" target="_blank" rel="noopener" data-en="Read" data-tr="Oku">Read</a>
+        </div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- ── TEACHING ───────────────────────────────────────────────────────────────── -->
+<!-- TEACHING -->
 <section id="teaching">
   <div class="container">
-    <div class="section-label">03 / Teaching</div>
-    <h2 class="section-title">Courses taught</h2>
+    <div class="section-label" data-en="03 / Teaching" data-tr="03 / Dersler">03 / Teaching</div>
+    <h2 class="section-title" data-en="Courses taught" data-tr="Verilen dersler">Courses taught</h2>
     <div class="teaching-grid">
       <div class="course-card">
         <div class="course-code">IR 236 · Bilkent University · Spring 2026</div>
-        <div class="course-title">20th Century World Politics</div>
+        <div class="course-title" data-en="20th Century World Politics" data-tr="20. Yüzyıl Dünya Siyaseti">20th Century World Politics</div>
         <div class="course-meta">
-          <span>Undergraduate · Visiting Lecturer</span>
-          <span>From the collapse of empires to the Cold War, decolonization, and the post-1989 order — a survey of the forces that shaped the modern international system.</span>
+          <span data-en="Undergraduate · Visiting Lecturer" data-tr="Lisans · Misafir Öğretim Görevlisi">Undergraduate · Visiting Lecturer</span>
+          <span data-en="From the collapse of empires to the Cold War, decolonization, and the post-1989 order — a survey of the forces that shaped the modern international system."
+                data-tr="İmparatorlukların çöküşünden Soğuk Savaş'a, dekolonizasyondan 1989 sonrası düzene — modern uluslararası sistemi şekillendiren güçlerin bir incelemesi.">From the collapse of empires to the Cold War, decolonization, and the post-1989 order — a survey of the forces that shaped the modern international system.</span>
         </div>
       </div>
       <div class="course-card">
         <div class="course-code">PSIR 468 · Kadir Has University · Spring 2025</div>
-        <div class="course-title">European Integration</div>
+        <div class="course-title" data-en="European Integration" data-tr="Avrupa Entegrasyonu">European Integration</div>
         <div class="course-meta">
-          <span>Undergraduate · Visiting Lecturer</span>
-          <span>Theoretical and empirical foundations of EU integration, enlargement policy, and the evolving relationship between Brussels and its neighbourhood.</span>
+          <span data-en="Undergraduate · Visiting Lecturer" data-tr="Lisans · Misafir Öğretim Görevlisi">Undergraduate · Visiting Lecturer</span>
+          <span data-en="Theoretical and empirical foundations of EU integration, enlargement policy, and the evolving relationship between Brussels and its neighbourhood."
+                data-tr="AB entegrasyonunun teorik ve ampirik temelleri, genişleme politikası ve Brüksel ile komşuluk arasındaki ilişki.">Theoretical and empirical foundations of EU integration, enlargement policy, and the evolving relationship between Brussels and its neighbourhood.</span>
         </div>
       </div>
       <div class="course-card">
         <div class="course-code">IR-INT 313 · Kadir Has University · Summer 2024</div>
-        <div class="course-title">International Relations Theory</div>
+        <div class="course-title" data-en="International Relations Theory" data-tr="Uluslararası İlişkiler Teorisi">International Relations Theory</div>
         <div class="course-meta">
-          <span>Undergraduate · Visiting Lecturer</span>
-          <span>A critical survey of IR theory from classical realism and liberalism through constructivism, critical theory, and post-positivist approaches.</span>
+          <span data-en="Undergraduate · Visiting Lecturer" data-tr="Lisans · Misafir Öğretim Görevlisi">Undergraduate · Visiting Lecturer</span>
+          <span data-en="A critical survey of IR theory from classical realism and liberalism through constructivism, critical theory, and post-positivist approaches."
+                data-tr="Klasik realizmden liberalizme, konstrüktivizmden eleştirel teori ve post-pozitivist yaklaşımlara Uİ teorisinin eleştirel bir incelemesi.">A critical survey of IR theory from classical realism and liberalism through constructivism, critical theory, and post-positivist approaches.</span>
         </div>
       </div>
       <div class="course-card">
         <div class="course-code">IR-INT 210 · Kadir Has University · Summer 2023</div>
-        <div class="course-title">Introduction to International Relations</div>
+        <div class="course-title" data-en="Introduction to International Relations" data-tr="Uluslararası İlişkilere Giriş">Introduction to International Relations</div>
         <div class="course-meta">
-          <span>Undergraduate · Visiting Lecturer</span>
-          <span>Core concepts, actors, and structures of the international system; foundational theories and contemporary global issues.</span>
+          <span data-en="Undergraduate · Visiting Lecturer" data-tr="Lisans · Misafir Öğretim Görevlisi">Undergraduate · Visiting Lecturer</span>
+          <span data-en="Core concepts, actors, and structures of the international system; foundational theories and contemporary global issues."
+                data-tr="Uluslararası sistemin temel kavramları, aktörleri ve yapıları; temel teoriler ve günümüz küresel meseleleri.">Core concepts, actors, and structures of the international system; foundational theories and contemporary global issues.</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── CV ─────────────────────────────────────────────────────────────────────── -->
+<!-- CV -->
 <section id="cv">
   <div class="container">
-    <div class="section-label">04 / CV</div>
-    <h2 class="section-title">Academic record</h2>
+    <div class="section-label" data-en="04 / CV" data-tr="04 / Özgeçmiş">04 / CV</div>
+    <h2 class="section-title" data-en="Academic record" data-tr="Akademik kayıt">Academic record</h2>
     <div class="cv-grid">
       <div>
-        <div class="cv-section-title">Positions</div>
+        <div class="cv-section-title" data-en="Positions" data-tr="Görevler">Positions</div>
         <div class="cv-items">
           <div class="cv-item">
             <div class="cv-item-header">
-              <div class="cv-item-title">Postdoctoral Researcher</div>
-              <div class="cv-item-date">2025–Present</div>
+              <div class="cv-item-title" data-en="Postdoctoral Researcher" data-tr="Doktora Sonrası Araştırmacı">Postdoctoral Researcher</div>
+              <div class="cv-item-date" data-en="2025–Present" data-tr="2025–Devam">2025–Present</div>
             </div>
-            <div class="cv-item-sub">Bilkent University, Dept. of International Relations<br>Carnegie Great Realignment Project</div>
+            <div class="cv-item-sub" data-en="Bilkent University · Carnegie Great Realignment Project" data-tr="Bilkent Üniversitesi · Carnegie Great Realignment Projesi">Bilkent University · Carnegie Great Realignment Project</div>
           </div>
           <div class="cv-item">
             <div class="cv-item-header">
-              <div class="cv-item-title">Visiting Lecturer</div>
-              <div class="cv-item-date">2023–Present</div>
+              <div class="cv-item-title" data-en="Visiting Lecturer" data-tr="Misafir Öğretim Görevlisi">Visiting Lecturer</div>
+              <div class="cv-item-date" data-en="2023–Present" data-tr="2023–Devam">2023–Present</div>
             </div>
-            <div class="cv-item-sub">Bilkent University & Kadir Has University</div>
+            <div class="cv-item-sub" data-en="Bilkent University & Kadir Has University" data-tr="Bilkent Üniversitesi & Kadir Has Üniversitesi">Bilkent University & Kadir Has University</div>
           </div>
           <div class="cv-item">
             <div class="cv-item-header">
-              <div class="cv-item-title">Publication Coordinator</div>
-              <div class="cv-item-date">2022–Present</div>
+              <div class="cv-item-title" data-en="Publication Coordinator" data-tr="Yayın Koordinatörü">Publication Coordinator</div>
+              <div class="cv-item-date" data-en="2022–Present" data-tr="2022–Devam">2022–Present</div>
             </div>
             <div class="cv-item-sub">Uluslararası İlişkiler Journal</div>
           </div>
           <div class="cv-item">
             <div class="cv-item-header">
-              <div class="cv-item-title">Project Assistant Fellow</div>
+              <div class="cv-item-title" data-en="Project Assistant Fellow" data-tr="Proje Asistanı">Project Assistant Fellow</div>
               <div class="cv-item-date">2023–2025</div>
             </div>
-            <div class="cv-item-sub">TÜBİTAK 3005 & TÜBİTAK 1002<br>PI: Sinem Akgül Açıkmeşe</div>
+            <div class="cv-item-sub" data-en="TÜBİTAK 3005 & 1002 · PI: Sinem Akgül Açıkmeşe" data-tr="TÜBİTAK 3005 & 1002 · Yön: Sinem Akgül Açıkmeşe">TÜBİTAK 3005 & 1002 · PI: Sinem Akgül Açıkmeşe</div>
           </div>
         </div>
       </div>
       <div>
-        <div class="cv-section-title">Under Review / Working Papers</div>
+        <div class="cv-section-title" data-en="Under Review / Working Papers" data-tr="İncelemede / Çalışma Halinde">Under Review / Working Papers</div>
         <div class="cv-items">
           <div class="cv-item">
             <div class="cv-item-title" style="font-size:.85rem;font-style:italic;">"Emotions as an Intervening Variable in Neo-Classical Realism" (with D. Sönmez)</div>
-            <div class="cv-item-sub" style="margin-top:.3rem;">Under review</div>
+            <div class="cv-item-sub" style="margin-top:.3rem;" data-en="Under review" data-tr="İncelemede">Under review</div>
           </div>
           <div class="cv-item">
             <div class="cv-item-title" style="font-size:.85rem;font-style:italic;">"The Politics of Bodily Refusal and Dance in Turkey" (with V. Özdemir & C.M. Kıcıroğlu)</div>
-            <div class="cv-item-sub" style="margin-top:.3rem;">Under review — Intersections</div>
+            <div class="cv-item-sub" style="margin-top:.3rem;" data-en="Under review — Intersections" data-tr="İncelemede — Intersections">Under review — Intersections</div>
           </div>
           <div class="cv-item">
             <div class="cv-item-title" style="font-size:.85rem;font-style:italic;">"Digital Sovereignty, Emotions, and Ontological Security" (with A. Gücüyener Evren & J. Franceschini)</div>
-            <div class="cv-item-sub" style="margin-top:.3rem;">Revise &amp; Resubmit</div>
+            <div class="cv-item-sub" style="margin-top:.3rem;" data-en="Revise & Resubmit" data-tr="Revize ve Yeniden Gönder">Revise & Resubmit</div>
           </div>
           <div class="cv-item">
             <div class="cv-item-title" style="font-size:.85rem;font-style:italic;">"Emotions and Affect in UN Peacekeeping: R2P Operations" (with İ.B. Karaman-Yılmazgil & İ. Karamık)</div>
-            <div class="cv-item-sub" style="margin-top:.3rem;">Revise &amp; Resubmit — International Peacekeeping</div>
+            <div class="cv-item-sub" style="margin-top:.3rem;" data-en="Revise & Resubmit — International Peacekeeping" data-tr="Revize ve Yeniden Gönder — International Peacekeeping">Revise & Resubmit — International Peacekeeping</div>
           </div>
         </div>
       </div>
     </div>
     <div class="cv-download">
-      <p>Full academic CV available for download</p>
-      <a class="btn-primary" href="Erman_Ermihan_CV_2026.pdf" download>Download CV (PDF)</a>
+      <p data-en="Full academic CV available for download" data-tr="Tam akademik özgeçmiş için indirin">Full academic CV available for download</p>
+      <a class="btn-primary" href="Erman_Ermihan_CV_2026.pdf" download data-en="Download CV (PDF)" data-tr="CV İndir (PDF)">Download CV (PDF)</a>
     </div>
   </div>
 </section>
 
-<!-- ── CONTACT ───────────────────────────────────────────────────────────────── -->
+<!-- CONTACT -->
 <section id="contact">
   <div class="container">
-    <div class="section-label">05 / Contact</div>
-    <h2 class="section-title">Get in touch</h2>
+    <div class="section-label" data-en="05 / Contact" data-tr="05 / İletişim">05 / Contact</div>
+    <h2 class="section-title" data-en="Get in touch" data-tr="İletişime geçin">Get in touch</h2>
     <div class="contact-grid">
       <div>
-        <p class="contact-text">
+        <p class="contact-text"
+           data-en="I welcome correspondence regarding research collaborations, conference invitations, editorial queries, and academic opportunities. Based in Istanbul."
+           data-tr="Araştırma işbirlikleri, konferans davetleri, editöryal sorular ve akademik fırsatlar için iletişime geçebilirsiniz. İstanbul'da yaşıyorum.">
           I welcome correspondence regarding research collaborations, conference invitations, editorial queries, and academic opportunities. Based in Istanbul.
         </p>
         <div class="contact-links">
-          <a class="contact-link" href="mailto:ermanermihan@gmail.com">
-            <span class="contact-link-icon">@</span>
-            ermanermihan@gmail.com
-          </a>
-          <a class="contact-link" href="https://www.linkedin.com/in/erman-ermihan-81244b56/" target="_blank">
-            <span class="contact-link-icon">in</span>
-            LinkedIn Profile
-          </a>
-          <a class="contact-link" href="https://twitter.com/erman1995" target="_blank">
-            <span class="contact-link-icon">𝕏</span>
-            @erman1995
-          </a>
-          <a class="contact-link" href="https://www.youtube.com/@1995erman" target="_blank">
-            <span class="contact-link-icon">▶</span>
-            YouTube Channel
-          </a>
+          <a class="contact-link" href="mailto:ermanermihan@gmail.com"><span class="contact-link-icon">@</span>ermanermihan@gmail.com</a>
+          <a class="contact-link" href="https://www.linkedin.com/in/erman-ermihan-81244b56/" target="_blank"><span class="contact-link-icon">in</span><span data-en="LinkedIn Profile" data-tr="LinkedIn Profili">LinkedIn Profile</span></a>
+          <a class="contact-link" href="https://twitter.com/erman1995" target="_blank"><span class="contact-link-icon">𝕏</span>@erman1995</a>
+          <a class="contact-link" href="https://www.youtube.com/@1995erman" target="_blank"><span class="contact-link-icon">▶</span><span data-en="YouTube Channel" data-tr="YouTube Kanalı">YouTube Channel</span></a>
         </div>
       </div>
-      <form class="contact-form" onsubmit="handleForm(event)">
-        <div class="form-group">
-          <label class="form-label">Name</label>
-          <input class="form-input" type="text" placeholder="Your name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" placeholder="your@email.com" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Message</label>
-          <textarea class="form-textarea" placeholder="Your message…" required></textarea>
-        </div>
-        <button class="btn-send" type="submit">Send Message</button>
-      </form>
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:1rem;" data-en="Affiliations" data-tr="Kurumlar">Affiliations</div>
+        <p style="font-size:.85rem;color:rgba(245,240,232,.65);line-height:1.85;">
+          <span data-en="Bilkent University, Department of International Relations" data-tr="Bilkent Üniversitesi, Uluslararası İlişkiler Bölümü">Bilkent University, Department of International Relations</span><br>
+          <span data-en="Global Academy — Researcher & Online Operations Coordinator" data-tr="Global Academy — Araştırmacı & Operasyon Koordinatörü">Global Academy — Researcher & Online Operations Coordinator</span><br>
+          <span data-en="Uluslararası İlişkiler Journal — Publication Coordinator" data-tr="Uluslararası İlişkiler Dergisi — Yayın Koordinatörü">Uluslararası İlişkiler Journal — Publication Coordinator</span>
+        </p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ─────────────────────────────────────────────────────────────────── -->
 <footer>
   <p>© 2026 Erman Ermihan</p>
-  <p>Bilkent University · Istanbul, Turkey</p>
+  <p data-en="Bilkent University · Istanbul, Turkey" data-tr="Bilkent Üniversitesi · İstanbul, Türkiye">Bilkent University · Istanbul, Turkey</p>
 </footer>
 
 <script>
-  // Filter publications
+  // HAMBURGER
+  function toggleMenu() {
+    const m = document.getElementById('mobile-menu');
+    const h = document.getElementById('hamburger');
+    m.classList.toggle('open');
+    h.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobile-menu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+  function syncMobileLang(lang) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.lang-btn')[lang==='en'?0:1].classList.add('active');
+    document.getElementById('mob-en').classList.toggle('active', lang==='en');
+    document.getElementById('mob-tr').classList.toggle('active', lang==='tr');
+  }
+
+  // LANGUAGE SWITCH
+  function setLang(lang, btn) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('[data-en]').forEach(el => {
+      const txt = el.getAttribute('data-' + lang);
+      if (txt !== null) {
+        // If element has children with data-en, only switch text-only attributes
+        if (txt.includes('<')) {
+          el.innerHTML = txt;
+        } else {
+          // Only update if it's a text-only node
+          const hasChildElement = Array.from(el.children).some(c => c.hasAttribute('data-en'));
+          if (!hasChildElement) el.innerHTML = txt;
+          else el.innerHTML = txt; // still update — child handlers run separately
+        }
+      }
+    });
+  }
+
+  // FILTER
   function filterPubs(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('.pub-item').forEach(item => {
-      if (cat === 'all' || item.dataset.cat === cat) {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-      // re-trigger animation
-      item.classList.remove('visible');
-      setTimeout(() => item.classList.add('visible'), 50);
+      item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'flex' : 'none';
     });
   }
 
-  // Scroll reveal for pub items
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 60);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.pub-item').forEach(el => observer.observe(el));
-
-  // Smooth active nav highlight
+  // NAV HIGHLIGHT
   const sections = document.querySelectorAll('section[id]');
   window.addEventListener('scroll', () => {
     const pos = window.scrollY + 100;
@@ -1035,15 +717,6 @@
       }
     });
   });
-
-  // Contact form
-  function handleForm(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('.btn-send');
-    btn.textContent = 'Message Sent ✓';
-    btn.style.background = '#4a7a40';
-    setTimeout(() => { btn.textContent = 'Send Message'; btn.style.background = ''; }, 3000);
-  }
 </script>
 </body>
 </html>
