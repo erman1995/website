@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IR Kriz Masası — Crisis Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,800;1,500&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#16202e;--ink-soft:#33415a;--paper:#efe7d4;--card:#faf6ea;--classified:#a4231f;--classified-deep:#7a1814;--brass:#a07c3e;--green:#2f6b4f;--amber:#c8791f;--line:#cdbf9f}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);background:radial-gradient(circle at 20% 8%,rgba(160,124,62,.10),transparent 40%),radial-gradient(circle at 85% 92%,rgba(164,35,31,.07),transparent 45%),var(--paper);min-height:100%;display:flex;align-items:center;justify-content:center;padding:20px;line-height:1.5}
+  .stage{width:100%;max-width:600px}
+  .eyebrow{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:3px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 18px 40px -22px rgba(22,32,46,.55);position:relative}
+  .panel::before{content:"";position:absolute;inset:6px;border:1px solid rgba(160,124,62,.30);border-radius:2px;pointer-events:none}
+  .menu{padding:36px 30px 32px;text-align:center}
+  .seal{width:62px;height:62px;margin:0 auto 18px;border-radius:50%;border:2px solid var(--brass);color:var(--brass);display:flex;align-items:center;justify-content:center;font-family:"Spectral",serif;font-weight:800;font-size:22px;position:relative}
+  .seal::after{content:"";position:absolute;inset:5px;border:1px dashed rgba(160,124,62,.55);border-radius:50%}
+  h1{font-family:"Spectral",serif;font-weight:800;font-size:29px;line-height:1.1;margin:4px 0 6px}
+  .sub{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.16em;color:var(--ink-soft);text-transform:uppercase;margin-bottom:24px}
+  .seg{display:flex;gap:6px;max-width:260px;margin:0 auto 22px}
+  .seg button{flex:1;padding:9px 0;border:1px solid var(--line);background:#fffdf8;font-family:"Space Mono",monospace;font-size:13px;color:var(--ink-soft);cursor:pointer;border-radius:2px}
+  .seg button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .seg button:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+  .rule{height:1px;background:var(--line);margin:8px 2px 20px}
+  .scen{display:flex;flex-direction:column;gap:12px;text-align:left}
+  .scen button{padding:18px;border:1px solid var(--line);background:#fffdf8;border-radius:2px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+  .scen button:hover{border-color:var(--ink);box-shadow:0 8px 20px -12px rgba(22,32,46,.5)}
+  .scen button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .scen .st{font-family:"Spectral",serif;font-weight:800;font-size:20px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .scen .sy{font-family:"Space Mono",monospace;font-size:12px;color:var(--brass)}
+  .scen .sd{font-size:13px;color:var(--ink-soft);margin-top:5px}
+  .simhead{margin-bottom:14px}
+  .simtop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .simtitle{font-family:"Spectral",serif;font-weight:800;font-size:20px;line-height:1.12}
+  .simrole{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-top:4px}
+  .backlink{font-family:"Space Mono",monospace;font-size:11px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:2px;padding:6px 9px;cursor:pointer;white-space:nowrap}
+  .backlink:hover{background:rgba(22,32,46,.05)}
+  .meter{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:9px 12px}
+  .meter .ml{display:flex;justify-content:space-between;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+  .meter .mzone{font-weight:700}
+  .bar{height:9px;background:#e7dcc4;border-radius:5px;overflow:hidden}
+  .bar > i{display:block;height:100%;width:40%;background:var(--brass);transition:width .5s,background .5s}
+  .prog{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.12em;color:var(--ink-soft);text-align:right;margin-top:7px}
+  .sit{padding:22px}
+  .sit .stamp{font-family:"Space Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--classified);border:1.5px solid var(--classified);padding:2px 7px;border-radius:2px;transform:rotate(2deg);display:inline-block;margin-bottom:14px}
+  .sit .phase{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.14em;color:var(--ink-soft);margin-bottom:8px}
+  .sittext{font-family:"Spectral",serif;font-size:18px;line-height:1.5}
+  .options{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+  .opt{text-align:left;padding:14px 16px;border:1px solid var(--line);background:var(--card);border-radius:3px;cursor:pointer;font-family:"Inter";font-size:15px;color:var(--ink);display:flex;gap:12px;align-items:flex-start;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--ink);background:#fffdf8}
+  .opt:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .opt .ono{font-family:"Space Mono",monospace;font-weight:700;color:var(--brass);flex:none}
+  .result{padding:22px}
+  .rlabel{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .rlabel::after{content:"";flex:1;height:1px;background:var(--line)}
+  .rtext{font-family:"Spectral",serif;font-size:17px;line-height:1.5;margin-bottom:18px}
+  .analysis{background:rgba(160,124,62,.08);border-left:3px solid var(--brass);border-radius:2px;padding:13px 15px}
+  .achip{display:inline-block;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:3px 8px;border-radius:2px;margin-bottom:8px}
+  .atext{font-size:14px;line-height:1.5;color:var(--ink)}
+  .cont{margin-top:18px;width:100%;padding:14px;border:none;border-radius:2px;cursor:pointer;background:var(--ink);color:var(--paper);font-family:"Space Mono",monospace;font-size:13px;letter-spacing:.2em;text-transform:uppercase}
+  .cont:hover{background:#0d1622}
+  .cont:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .endwrap{padding:30px 24px}
+  .endtag{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px}
+  .endtag.good{color:var(--green)} .endtag.bad{color:var(--classified)} .endtag.mixed{color:var(--amber)}
+  .endtitle{font-family:"Spectral",serif;font-weight:800;font-size:26px;line-height:1.1;margin-bottom:12px}
+  .endtext{font-family:"Spectral",serif;font-size:17px;line-height:1.5;margin-bottom:20px}
+  .debrief{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:16px 18px}
+  .debrief h3{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px}
+  .debrief ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .debrief li{font-size:14px;line-height:1.45;padding-left:16px;position:relative}
+  .debrief li::before{content:"—";position:absolute;left:0;color:var(--brass)}
+  .path{margin-top:16px;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.08em;color:var(--ink-soft);line-height:1.7}
+  .path b{color:var(--ink)}
+  .endbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+  .endbtns button{padding:13px;border-radius:2px;cursor:pointer;font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+  .b-again{border:none;background:var(--ink);color:var(--paper)}
+  .b-menu{border:1px solid var(--line);background:var(--card);color:var(--ink-soft)}
+  .endbtns button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .hidden{display:none !important}
+  @media(max-width:430px){.menu{padding:30px 20px}.sit,.result,.endwrap{padding:18px}.sittext{font-size:17px}}
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <section id="menu" class="panel menu">
+    <div class="seal">SR</div>
+    <div class="eyebrow">Situation Room · Kriz Masası</div>
+    <h1>IR Kriz Simülatörü</h1>
+    <p class="sub">Karar Ver · Sonuçları Gör</p>
+    <div class="seg" id="langSeg">
+      <button data-lang="tr" aria-pressed="true">Türkçe</button>
+      <button data-lang="en" aria-pressed="false">English</button>
+    </div>
+    <div class="rule"></div>
+    <div class="scen" id="scenList"></div>
+  </section>
+
+  <section id="sim" class="hidden">
+    <div class="simhead">
+      <div class="simtop">
+        <div><div class="simtitle" id="hTitle">—</div><div class="simrole" id="hRole">—</div></div>
+        <button class="backlink" id="menuBtn">Menü</button>
+      </div>
+      <div class="meter">
+        <div class="ml"><span id="mLabel">Tırmanma</span><span class="mzone" id="mZone">—</span></div>
+        <div class="bar"><i id="mFill"></i></div>
+        <div class="prog" id="mProg"></div>
+      </div>
+    </div>
+    <div class="panel sit" id="sitCard">
+      <span class="stamp">GİZLİ</span>
+      <div class="phase" id="sPhase"></div>
+      <div class="sittext" id="sText"></div>
+      <div class="options" id="sOptions"></div>
+    </div>
+    <div class="panel result hidden" id="resultCard">
+      <div class="rlabel" id="rLabel">Sonuç</div>
+      <div class="rtext" id="rText"></div>
+      <div class="analysis"><span class="achip" id="rChip"></span><div class="atext" id="rAnalysis"></div></div>
+      <button class="cont" id="contBtn">Devam →</button>
+    </div>
+    <div class="panel endwrap hidden" id="endCard">
+      <div class="endtag" id="eTag"></div>
+      <div class="endtitle" id="eTitle"></div>
+      <div class="endtext" id="eText"></div>
+      <div class="debrief"><h3 id="eDebriefLabel">Değerlendirme</h3><ul id="eDebrief"></ul></div>
+      <div class="path" id="ePath"></div>
+      <div class="endbtns">
+        <button class="b-again" id="againBtn">Baştan</button>
+        <button class="b-menu" id="toMenuBtn">Senaryolar</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let lang="tr", SC=null, cur=null, esc=40, pending=null, steps=0, trail=[];
+
+const UI={
+  tr:{esc:"Tırmanma",result:"Sonuç",cont:"Devam →",debrief:"Değerlendirme",again:"Baştan",menu:"Senaryolar",menuBtn:"Menü",
+      zones:["Düşük","Orta","Yüksek","Kritik"],step:"Karar",path:"İzlediğin yol"},
+  en:{esc:"Escalation",result:"Outcome",cont:"Continue →",debrief:"Debrief",again:"Restart",menu:"Scenarios",menuBtn:"Menu",
+      zones:["Low","Elevated","High","Critical"],step:"Decision",path:"Your path"}
+};
+
+const SCEN={
+cuba:{
+ titleTr:"Küba Füze Krizi",titleEn:"Cuban Missile Crisis",year:"1962",
+ descTr:"Casus uçaklar Küba'da Sovyet nükleer füzeleri buldu. ABD Başkanısın. On üç gün, bir dünya savaşının eşiğinde.",
+ descEn:"Spy planes find Soviet nuclear missiles in Cuba. You are the U.S. President. Thirteen days on the edge of world war.",
+ roleTr:"Rol: ABD Başkanı · Ekim 1962",roleEn:"Role: U.S. President · October 1962",start:"c0",
+ nodes:{
+  c0:{phaseTr:"Gün 1 · Keşif",phaseEn:"Day 1 · Discovery",
+    sTr:"U-2 uçakları Küba'da yapım halindeki Sovyet nükleer füze sahalarını görüntüledi. Kurmaylar toplandı. İlk hamlen ne olacak?",
+    sEn:"U-2 flights photographed Soviet nuclear missile sites under construction in Cuba. Your advisers are assembled. What is your first move?",
+    opts:[
+      {tr:"Füze sahalarını derhal havadan vur",en:"Launch an immediate airstrike on the sites",kavTr:"Önleyici vuruş",kavEn:"Preemptive strike",
+       resTr:"Generaller memnun ama vuruş Sovyet danışmanları öldürebilir ve Moskova'yı misillemeye zorlayabilir. Müttefikler tedirgin.",
+       resEn:"The generals approve, but a strike could kill Soviet advisers and force Moscow to retaliate. Allies are alarmed.",
+       anTr:"Askeri seçenek kararlılık gösterir ama tırmanma sarmalını başlatır: karşı taraf da güvenliğini tehdit altında görür.",
+       anEn:"The military option shows resolve but starts an escalation spiral: the other side also sees its security threatened.",esc:30,to:"c1a"},
+      {tr:"Deniz ablukası ('karantina') ilan et",en:"Declare a naval blockade ('quarantine')",kavTr:"Zorlayıcı diplomasi",kavEn:"Coercive diplomacy",
+       resTr:"Kararlılık sinyali verirken Moskova'ya geri çekilme alanı bırakırsın. Sovyet gemileri hâlâ yolda; dünya nefesini tuttu.",
+       resEn:"You signal resolve while leaving Moscow room to retreat. Soviet ships are still en route; the world holds its breath.",
+       anTr:"Sınırlı bir zorlama hamlesi: net bir kırmızı çizgi çizer ama karşı tarafa yüz kurtaracak bir çıkış bırakır.",
+       anEn:"A limited coercive move: it draws a clear red line yet leaves the other side a face-saving exit.",esc:10,to:"c1b"},
+      {tr:"Sessiz diplomasi: arka kanaldan görüş, kamuoyuna açıklama yapma",en:"Quiet diplomacy: use back channels, say nothing publicly",kavTr:"Kamuoyu maliyetleri",kavEn:"Audience costs",
+       resTr:"Kriz gizli kalırsa tırmanmaz. Ama istihbarat sızarsa muhalefet seni 'zayıf' ilan eder.",
+       resEn:"Kept secret, the crisis stays cool. But if it leaks, the opposition will brand you 'weak'.",
+       anTr:"Kamuoyu önünde taahhüt vermemek esneklik sağlar, ama iç siyasette güvenilirlik riski taşır.",
+       anEn:"Avoiding a public commitment preserves flexibility but risks your credibility at home.",esc:-5,to:"c1c"}
+    ]},
+  c1a:{phaseTr:"Gün 3 · Misilleme tehdidi",phaseEn:"Day 3 · Threat of reprisal",
+    sTr:"Hava saldırısı sahaları vurdu, Sovyet personel öldü. Moskova sert misilleme tehdidinde. Küba'da hâlâ aktif füzeler var.",
+    sEn:"The airstrike hit the sites and killed Soviet personnel. Moscow threatens harsh reprisal. Active missiles still remain in Cuba.",
+    opts:[
+      {tr:"Tam işgal: Küba'yı bas, işi bitir",en:"Full invasion: take Cuba, finish it",kavTr:"Tırmanma sarmalı",kavEn:"Escalation spiral",
+       resTr:"İşgal başlar. Sahadaki taktik nükleer başlıklar devreye girer. Moskova Berlin'de karşılık verir.",
+       resEn:"The invasion begins. Tactical nuclear warheads on the ground are used. Moscow responds in Berlin.",
+       anTr:"Her taraf 'son bir adım daha' derken kontrolü kaybeder. Bu, güvenlik ikileminin en tehlikeli sonu.",
+       anEn:"Each side pushes 'just one more step' and loses control. This is the most dangerous end of the security dilemma.",esc:40,to:"endWar"},
+      {tr:"Dur; sıcak hat üzerinden Moskova'ya çıkış öner",en:"Halt; use the hotline to offer Moscow an exit",kavTr:"Kriz yönetimi",kavEn:"Crisis management",
+       resTr:"Ateşi durdurursun. Güven zedelendi ama iki taraf da uçurumdan geri çekilmek istiyor.",
+       resEn:"You stop the shooting. Trust is damaged, but both sides want to step back from the brink.",
+       anTr:"Geç kalmış da olsa bir çıkış açmak tırmanmayı tersine çevirebilir. İletişim kanalları hayat kurtarır.",
+       anEn:"Even late, opening an exit can reverse escalation. Communication channels save lives.",esc:-10,to:"cMid"}
+    ]},
+  c1b:{phaseTr:"Gün 5 · Abluka hattı",phaseEn:"Day 5 · The blockade line",
+    sTr:"Sovyet gemileri abluka hattına yaklaşıyor. Bir tanker durmadan ilerliyor. Donanma emir bekliyor.",
+    sEn:"Soviet ships approach the blockade line. One tanker keeps coming. The Navy awaits orders.",
+    opts:[
+      {tr:"Tankeri durdurmak için zor kullan / ateş aç",en:"Use force / fire to stop the tanker",kavTr:"Uçurum kenarı",kavEn:"Brinkmanship",
+       resTr:"Kırmızı çizgiyi uygularsın. Ama ilk kurşun bir zincirleme misillemeyi tetikleyebilir.",
+       resEn:"You enforce the red line. But the first shot could trigger a chain of reprisals.",
+       anTr:"Uçurum kenarına gitmek karşı tarafı geri adıma zorlayabilir; ama kaza ve yanlış hesap riski yüksektir.",
+       anEn:"Going to the brink can force the other side back; but the risk of accident and miscalculation is high.",esc:25,to:"cMid"},
+      {tr:"Tankerin geçmesine izin ver, yalnız silah taşıyanları durdur",en:"Let the tanker pass, stop only weapons carriers",kavTr:"Yüz kurtarma",kavEn:"Face-saving",
+       resTr:"Esneklik gösterirsin. Moskova bunu bir jest olarak okur; masaya oturma ihtimali doğar.",
+       resEn:"You show flexibility. Moscow reads it as a gesture; a path to the table opens.",
+       anTr:"Karşı tarafa onur kaybettirmeden geri çekilme alanı bırakmak, çatışmayı müzakereye çevirir.",
+       anEn:"Leaving the other side a dignified retreat turns confrontation into negotiation.",esc:-5,to:"cMid"},
+      {tr:"BM Güvenlik Konseyi'ne git, kanıtları göster",en:"Take it to the UN Security Council, present the evidence",kavTr:"Meşruiyet · çok taraflılık",kavEn:"Legitimacy · multilateralism",
+       resTr:"Dünya kamuoyunu yanına alırsın. Süreç yavaş ama Moskova diplomatik baskı altında.",
+       resEn:"You win world opinion. The process is slow, but Moscow is under diplomatic pressure.",
+       anTr:"Uluslararası meşruiyet elini güçlendirir; kurumlar zorlamanın maliyetini paylaştırır.",
+       anEn:"International legitimacy strengthens your hand; institutions share the cost of coercion.",esc:0,to:"cMid"}
+    ]},
+  c1c:{phaseTr:"Gün 4 · Sızıntı",phaseEn:"Day 4 · The leak",
+    sTr:"Haber basına sızdı. Muhalefet 'hükümet uyudu' diye saldırıyor, kamuoyunda panik var. Baskı altındasın.",
+    sEn:"The story leaked. The opposition attacks — 'the government slept' — and the public is panicking. You are under pressure.",
+    opts:[
+      {tr:"Sertleş: kamuoyu önünde abluka ilan et",en:"Get tough: publicly declare a blockade",kavTr:"İzleyici önünde bağlanma",kavEn:"Tying hands publicly",
+       resTr:"Kararlılığını ilan edersin. Artık geri adım atmak zorlaştı; sözünün arkasında durman gerekiyor.",
+       resEn:"You announce resolve. Backing down is now costly; you must stand behind your words.",
+       anTr:"Kamuoyu önünde bağlanmak sinyalini güçlendirir ama esnekliğini azaltır — audience costs iki yönlü çalışır.",
+       anEn:"A public commitment strengthens your signal but reduces flexibility — audience costs cut both ways.",esc:10,to:"cMid"},
+      {tr:"Şeffaf ol: ulusa seslen, seçenekleri açıkla",en:"Be transparent: address the nation, lay out options",kavTr:"Şeffaflık · güven",kavEn:"Transparency · trust",
+       resTr:"Paniği yatıştırırsın ve müzakere için alan açık kalır. Sovyetler de niyetini net okur.",
+       resEn:"You calm the panic and keep room to negotiate. The Soviets also read your intent clearly.",
+       anTr:"Belirsizliği azaltmak yanlış hesabı düşürür; kriz iletişiminde netlik tırmanmayı önler.",
+       anEn:"Reducing ambiguity lowers miscalculation; clarity in crisis communication prevents escalation.",esc:0,to:"cMid"}
+    ]},
+  cMid:{phaseTr:"Gün 12 · Kara Cumartesi",phaseEn:"Day 12 · Black Saturday",
+    sTr:"Küba üzerinde bir U-2 düşürüldü, pilot öldü. Generaller derhal misilleme istiyor. Aynı anda Kruşçev'den ilk uzlaşma sinyalleri geliyor. Karar senin.",
+    sEn:"A U-2 is shot down over Cuba and the pilot is killed. The generals demand immediate reprisal. At the same moment, first signals of compromise arrive from Khrushchev. The call is yours.",
+    opts:[
+      {tr:"Misilleme yap: hava savunmasını vur",en:"Retaliate: strike the air defenses",kavTr:"Otomatik misilleme",kavEn:"Automatic reprisal",
+       resTr:"Önceden ilan edilmiş misilleme kuralını uygularsın. Tansiyon tavan yapar, Moskova bunu tırmanma sayar.",
+       resEn:"You enforce the pre-announced reprisal rule. Tension spikes and Moscow reads it as escalation.",
+       anTr:"Önceden bağlanmış kurallar caydırıcıdır ama krizde esnekliği yok eder; bir kaza savaşı tetikleyebilir.",
+       anEn:"Pre-committed rules deter but destroy flexibility in a crisis; a single accident can trigger war.",esc:30,to:"c2hot"},
+      {tr:"Kazayı görmezden gel, müzakereyi sürdür",en:"Treat it as an accident, keep negotiating",kavTr:"Tırmanmama iradesi",kavEn:"Deliberate non-escalation",
+       resTr:"Provokasyona kapılmazsın. Sahadaki bir subayın yerel kararı olabileceğini varsayar, kanalı açık tutarsın.",
+       resEn:"You refuse the provocation, assuming it may be a local officer's decision, and keep the channel open.",
+       anTr:"Her olayı kasıtlı saymamak (yanlış algıyı hesaba katmak) kontrolsüz tırmanmayı engeller.",
+       anEn:"Not reading every incident as intentional (accounting for misperception) prevents uncontrolled escalation.",esc:-5,to:"c2"},
+      {tr:"Gizli kanaldan sert ama özel bir uyarı gönder",en:"Send a firm but private warning via back channel",kavTr:"Özel sinyal",kavEn:"Private signaling",
+       resTr:"Kardeşin aracılığıyla Sovyet elçisine net mesaj: 'zaman doluyor, ama çıkış hâlâ var.'",
+       resEn:"Through your brother, a clear message to the Soviet ambassador: 'time is running out, but an exit still exists.'",
+       anTr:"Kamuoyu önünde küçük düşürmeden özel baskı, karşı tarafın geri adım atmasını kolaylaştırır.",
+       anEn:"Private pressure without public humiliation makes it easier for the other side to step back.",esc:0,to:"c2"}
+    ]},
+  c2hot:{phaseTr:"Gün 12 · Bıçak sırtı",phaseEn:"Day 12 · Knife's edge",
+    sTr:"Misilleme sonrası iki taraf da en yüksek alarmda. Bir yanlış hareket zincirleme savaşa yol açabilir. Son bir pencere var.",
+    sEn:"After the reprisal both sides are at maximum alert. One wrong move could chain into war. One window remains.",
+    opts:[
+      {tr:"İşgale geç, inisiyatifi al",en:"Move to invasion, seize the initiative",kavTr:"Kontrolün kaybı",kavEn:"Loss of control",
+       resTr:"Askeri mantık diplomasiyi ezer. Sahadaki nükleer silahlar devreye girer.",
+       resEn:"Military logic overrides diplomacy. Nuclear weapons on the ground come into play.",
+       anTr:"Tırmanma bir kez ivme kazanınca durdurmak neredeyse imkansızdır.",
+       anEn:"Once escalation gains momentum, stopping it is nearly impossible.",esc:35,to:"endWar"},
+      {tr:"Acil arka kanal: her şeyi masaya koy",en:"Emergency back channel: put everything on the table",kavTr:"Son çıkış",kavEn:"Last off-ramp",
+       resTr:"Kardeşin gizli görüşmede bir formül önerir. Moskova nefes alacak bir alan görür.",
+       resEn:"Your brother offers a formula in a secret meeting. Moscow sees room to breathe.",
+       anTr:"En yüksek gerilimde bile açık bir iletişim hattı çözümün önkoşuludur.",
+       anEn:"Even at peak tension, an open communication line is the precondition for a solution.",esc:-15,to:"c2"}
+    ]},
+  c2:{phaseTr:"Gün 13 · İki mektup",phaseEn:"Day 13 · Two letters",
+    sTr:"Kruşçev iki mesaj gönderdi. İlki uzlaşmacı: 'Füzeleri çekeriz, Küba'yı işgal etmeyin.' İkincisi sert: 'Türkiye'deki Jüpiter füzelerinizi de sökün.'",
+    sEn:"Khrushchev sends two messages. The first is conciliatory: 'We withdraw the missiles, you pledge not to invade Cuba.' The second is hard: 'Also remove your Jupiter missiles from Turkey.'",
+    opts:[
+      {tr:"Sert mektubu yok say; uzlaşmacıya 'evet' de, Jüpiterleri gizlice sök",en:"Ignore the hard letter; accept the soft one, quietly remove the Jupiters",kavTr:"Gizli taviz",kavEn:"Secret concession",
+       resTr:"Moskova geri çekilir. Kamuoyu bunu senin zaferin olarak görür; taviz gizli kalır.",
+       resEn:"Moscow backs down. The public sees it as your victory; the concession stays secret.",
+       anTr:"Açık taviz vermeden gizli taviz vermek hem krizi çözer hem yüz kurtarır — usta bir kriz diplomasisi.",
+       anEn:"Conceding secretly while publicly conceding nothing resolves the crisis and saves face — deft crisis diplomacy.",esc:-25,to:"c3"},
+      {tr:"İkisini de reddet, ültimatom ver",en:"Reject both, issue an ultimatum",kavTr:"Uçurum kenarı",kavEn:"Brinkmanship",
+       resTr:"Saatler kritikleşir. Sovyet komutanlar teyakkuzda. Herkes tetikte.",
+       resEn:"The hours turn critical. Soviet commanders are on alert. Everyone is on a hair trigger.",
+       anTr:"Tavizsiz baskı karşı tarafı köşeye sıkıştırır; kaza ihtimali kontrol dışı kararları tetikleyebilir.",
+       anEn:"Uncompromising pressure corners the other side; the chance of accident can trigger uncontrolled decisions.",esc:25,to:"endBrink"},
+      {tr:"Türkiye füzelerini kamuoyu önünde açıkça takas et",en:"Openly trade away the Turkey missiles in public",kavTr:"İttifak güvenilirliği",kavEn:"Alliance credibility",
+       resTr:"Kriz çözülür, ama Ankara ve NATO 'başımızın üstünden pazarlık yapıldı' diye küser.",
+       resEn:"The crisis ends, but Ankara and NATO feel betrayed — 'bargained away over our heads'.",
+       anTr:"Açık taviz müttefiklerin gözünde güvenilirliğini zedeler; ittifak yönetimi bazen düşmandan zordur.",
+       anEn:"An open concession dents your credibility with allies; managing an alliance is sometimes harder than the adversary.",esc:-20,to:"c3weak"}
+    ]},
+  c3:{phaseTr:"Sonrası · Doğrulama",phaseEn:"Aftermath · Verification",
+    sTr:"Moskova füzeleri çekmeyi kabul etti. Şimdi krizi nasıl kapatacaksın? Doğrulama ve yüz kurtarma dengesi kritik.",
+    sEn:"Moscow has agreed to withdraw. Now how do you close the crisis? The balance of verification and face-saving is critical.",
+    opts:[
+      {tr:"Yerinde denetim iste, doğrulanana dek ablukayı sürdür",en:"Demand on-site inspection, keep the blockade until verified",kavTr:"Doğrulama",kavEn:"Verification",
+       resTr:"Sözün havada kalmasını önlersin. Süreç gergin ama füzelerin gerçekten söküldüğünü teyit edersin.",
+       resEn:"You avoid an empty promise. The process is tense but you confirm the missiles are truly removed.",
+       anTr:"'Güven ama doğrula': anlaşmaların uygulanması, imzalanmasından daha önemlidir.",
+       anEn:"'Trust but verify': implementing agreements matters more than signing them.",esc:-15,to:"endPeace"},
+      {tr:"Güven göster, ablukayı hızla kaldır, Kruşçev'in yüzünü kurtar",en:"Show trust, lift the blockade quickly, let Khrushchev save face",kavTr:"Karşılıklı yüz kurtarma",kavEn:"Mutual face-saving",
+       resTr:"Kruşçev iç muhaliflerine karşı güçlenir; ilişki gelecekteki krizler için daha az düşmanca kalır.",
+       resEn:"Khrushchev is strengthened against his hardliners; the relationship stays less hostile for future crises.",
+       anTr:"Rakibin iç siyasetini düşünmek, çözümün kalıcılığını artırır — kazananı utandırmamak da bir stratejidir.",
+       anEn:"Considering the rival's domestic politics makes the settlement durable — not humiliating the loser is itself a strategy.",esc:-10,to:"endPeace"},
+      {tr:"Zaferi ilan et, Moskova'yı kamuoyu önünde küçük düşür",en:"Declare victory, humiliate Moscow publicly",kavTr:"Kazananın kibri",kavEn:"Victor's hubris",
+       resTr:"İç siyasette puan toplarsın ama Moskova aşağılanmış hisseder ve bir daha asla geri kalmamaya yemin eder.",
+       resEn:"You score at home, but Moscow feels humiliated and vows never to fall behind again.",
+       anTr:"Aşırı zafer, rakibi silahlanmaya iter; bugünün galibiyeti yarının silahlanma yarışını doğurabilir.",
+       anEn:"Excessive triumph pushes the rival to rearm; today's win can breed tomorrow's arms race.",esc:5,to:"endWeak"}
+    ]},
+  c3weak:{phaseTr:"Sonrası · İttifak onarımı",phaseEn:"Aftermath · Repairing the alliance",
+    sTr:"Kriz bitti ama müttefiklerin tedirgin. Türkiye ve NATO'ya nasıl yaklaşacaksın?",
+    sEn:"The crisis is over but your allies are uneasy. How will you approach Turkey and NATO?",
+    opts:[
+      {tr:"Güvenceler ver, danışma mekanizmalarını güçlendir",en:"Offer reassurances, strengthen consultation mechanisms",kavTr:"İttifak onarımı",kavEn:"Alliance repair",
+       resTr:"Güveni kısmen yeniden inşa edersin ama 'gerekirse yine takas ederler mi?' şüphesi kalır.",
+       resEn:"You partly rebuild trust, but the doubt lingers: 'would they trade us away again?'",
+       anTr:"Genişletilmiş caydırıcılığın kredisi bir kez sarsılınca onarımı uzun sürer.",
+       anEn:"Once the credit of extended deterrence is shaken, repairing it takes a long time.",esc:-10,to:"endWeak"},
+      {tr:"Hiçbir şey olmamış gibi davran",en:"Act as if nothing happened",kavTr:"İhmal edilen ittifak",kavEn:"Neglected alliance",
+       resTr:"Müttefikler sessiz kalır ama kendi bağımsız savunma arayışlarına yönelir.",
+       resEn:"Allies stay quiet but start seeking their own independent defense options.",
+       anTr:"Görmezden gelinen güven açığı, ittifak içi bağımsızlaşma ve dağılma eğilimini besler.",
+       anEn:"An ignored trust gap fuels tendencies toward autonomy and fragmentation within the alliance.",esc:5,to:"endWeak"}
+    ]},
+  endPeace:{end:true,tone:"good",tagTr:"Çözüm · Barış",tagEn:"Resolution · Peace",tTr:"Uçurumdan Dönüş",tEn:"Back from the Brink",
+    xTr:"Füzeler sökülür, savaş önlenir. Tarihçiler bunu soğukkanlı kriz yönetiminin ders kitabı örneği sayacak.",
+    xEn:"The missiles are removed and war is averted. Historians will call this a textbook case of cool crisis management.",
+    dTr:["Kararlılık ile geri çekilme alanını birlikte sunmak (signaling + off-ramp) tırmanmayı durdurdu.","Gizli taviz, kamuoyu maliyetini ödemeden çözüm sağladı.","Doğrudan iletişim kanalları yanlış hesabı azalttı.","'Güven ama doğrula' ilkesi anlaşmayı kalıcı kıldı."],
+    dEn:["Pairing resolve with an exit (signaling + off-ramp) stopped the escalation.","A secret concession solved the crisis without paying audience costs.","Direct communication channels reduced miscalculation.","'Trust but verify' made the settlement durable."]},
+  endBrink:{end:true,tone:"mixed",tagTr:"Belirsiz · Kıl payı",tagEn:"Uncertain · By a hair",tTr:"Bıçak Sırtı",tEn:"On a Knife's Edge",
+    xTr:"Savaş çıkmadı ama bir kaza her şeyi bitirebilirdi. Çözüm şansa kaldı, kontrole değil.",
+    xEn:"War did not break out, but a single accident could have ended everything. Resolution came by luck, not control.",
+    dTr:["Uçurum kenarı taktiği bazen işe yarar ama kaza ve yanlış hesap riskini uçurur.","Tavizsiz baskı karşı tarafa çıkış bırakmaz; köşeye sıkışan aktör öngörülemez olur.","Kriz yönetiminde 'kazanmak' ile 'hayatta kalmak' aynı şey değildir."],
+    dEn:["Brinkmanship sometimes works but sends accident and miscalculation risk soaring.","Uncompromising pressure leaves no exit; a cornered actor becomes unpredictable.","In crisis management, 'winning' and 'surviving' are not the same thing."]},
+  endWeak:{end:true,tone:"mixed",tagTr:"Çözüm · İttifak bedeli",tagEn:"Resolution · Alliance cost",tTr:"Kazanılan Barış, Sarsılan İttifak",tEn:"Peace Won, Alliance Shaken",
+    xTr:"Kriz biter, ama açık taviz ve sonrası müttefiklerini rahatsız eder; NATO içinde bir güven sorusu kalır.",
+    xEn:"The crisis ends, but the open concession and its aftermath unsettle allies; a trust question lingers inside NATO.",
+    dTr:["Açık taviz düşmanla çözüm sağlar ama müttefik gözünde güvenilirliği zedeler.","İttifak güvenilirliği (extended deterrence) bir devletin en kırılgan sermayesidir.","Bir kararın maliyeti sadece rakibe değil, dostlara da bakılarak ölçülür."],
+    dEn:["An open concession settles things with the adversary but dents credibility with allies.","Alliance credibility (extended deterrence) is a state's most fragile capital.","A decision's cost is measured not only against the rival but against friends too."]},
+  endWar:{end:true,tone:"bad",tagTr:"Felaket · Nükleer savaş",tagEn:"Catastrophe · Nuclear war",tTr:"Kontrolün Kaybı",tEn:"Loss of Control",
+    xTr:"Tırmanma sarmalı kontrolden çıktı. Kimse savaşı istemedi ama her adım bir sonrakini kaçınılmaz kıldı.",
+    xEn:"The escalation spiral spun out of control. No one wanted war, yet each step made the next inevitable.",
+    dTr:["Güvenlik ikilemi: bir tarafın savunması diğerinin tehdidi olur, sarmal kendini besler.","Askeri seçenekler hızlıdır ama geri alınamaz; diplomasiye alan bırakmaz.","Yanlış algı ve zaman baskısı, rasyonel aktörleri felakete sürükleyebilir."],
+    dEn:["Security dilemma: one side's defense is the other's threat, and the spiral feeds itself.","Military options are fast but irreversible; they leave no room for diplomacy.","Misperception and time pressure can drive rational actors into catastrophe."]}
+ }
+},
+ww1:{
+ titleTr:"Temmuz Krizi",titleEn:"The July Crisis",year:"1914",
+ descTr:"Saraybosna'da Arşidük öldürüldü. Bir Büyük Güç karar alıcısısın. İttifaklar, seferberlik takvimleri ve onur Avrupa'yı uçuruma sürüklüyor.",
+ descEn:"The Archduke is assassinated in Sarajevo. You are a Great Power decision-maker. Alliances, mobilization timetables and honour drag Europe toward the abyss.",
+ roleTr:"Rol: Almanya karar alıcısı · Temmuz 1914",roleEn:"Role: German decision-maker · July 1914",start:"w0",
+ nodes:{
+  w0:{phaseTr:"28 Haziran · Suikast",phaseEn:"28 June · The assassination",
+    sTr:"Müttefikin Avusturya-Macaristan, Arşidük'ün öldürülmesinden Sırbistan'ı sorumlu tutuyor ve onu cezalandırmak için senden destek istiyor.",
+    sEn:"Your ally Austria-Hungary blames Serbia for the Archduke's murder and asks for your backing to punish it.",
+    opts:[
+      {tr:"Koşulsuz destek ver ('açık çek')",en:"Give unconditional support (a 'blank check')",kavTr:"Zincire vurulma",kavEn:"Chain-ganging",
+       resTr:"Viyana cesaretlenir ve Sırbistan'a çok ağır bir ültimatom hazırlar. Artık müttefikinin kararlarına bağlısın.",
+       resEn:"Vienna is emboldened and drafts a crushing ultimatum for Serbia. You are now tied to your ally's choices.",
+       anTr:"İttifak taahhüdü müttefiki pervasızlaştırabilir ve seni onun kararlarına kilitler (chain-ganging / moral hazard).",
+       anEn:"An alliance commitment can make an ally reckless and lock you into its decisions (chain-ganging / moral hazard).",esc:30,to:"w1a"},
+      {tr:"Ölçülü destek: cezalandır ama sınırlı tut",en:"Measured support: punish, but keep it limited",kavTr:"İttifak yönetimi",kavEn:"Alliance management",
+       resTr:"Viyana'ya 'sınırlı kal' dersin. Ama müttefikin bunu isteksizlik okur ve kendi yolunda ilerler.",
+       resEn:"You tell Vienna to 'stay limited'. But your ally reads it as reluctance and presses on regardless.",
+       anTr:"Müttefiki frenlemek tırmanmayı yavaşlatabilir; ama zayıf sinyal müttefiki tek başına harekete itebilir.",
+       anEn:"Restraining an ally can slow escalation; but a weak signal may push the ally to act alone.",esc:5,to:"w1b"},
+      {tr:"Frene bas: dört büyük güç arasında arabuluculuk öner",en:"Hit the brakes: propose mediation among the great powers",kavTr:"Avrupa Ahengi",kavEn:"Concert of Europe",
+       resTr:"Bir konferans çağrısı yaparsın. Viyana yavaşlığından şikayetçi, Petersburg niyetinden emin değil.",
+       resEn:"You call for a conference. Vienna resents the delay, and St. Petersburg is unsure of your intent.",
+       anTr:"Çok taraflı arabuluculuk krizi yerelleştirebilir; kurumsallaşmış diyalog tırmanmayı kırar.",
+       anEn:"Multilateral mediation can localize the crisis; institutionalized dialogue breaks the escalation.",esc:-10,to:"w1c"}
+    ]},
+  w1a:{phaseTr:"25 Temmuz · Ültimatom",phaseEn:"25 July · The ultimatum",
+    sTr:"Ültimatom Sırbistan tarafından kısmen kabul edildi ama yeterli görülmedi. Rusya, Sırbistan'ı korumak için seferberlik sinyali veriyor.",
+    sEn:"The ultimatum is partly accepted by Serbia but deemed insufficient. Russia signals mobilization to protect Serbia.",
+    opts:[
+      {tr:"Sen de seferber ol, savaş planını hazırla",en:"Mobilize too, ready the war plan",kavTr:"Saldırı kültürü",kavEn:"Cult of the offensive",
+       resTr:"Seferberlik takvimleri işlemeye başlar. Planlar 'önce vuran kazanır' mantığına dayalı; durmak zor.",
+       resEn:"Mobilization timetables start ticking. The plans assume 'whoever strikes first wins'; stopping is hard.",
+       anTr:"Saldırı üstünlüğü inancı ve katı takvimler savaşı otomatikleştirir.",
+       anEn:"Belief in offensive advantage and rigid timetables automate war.",esc:35,to:"w2"},
+      {tr:"Rusya'ya 'dur' de ve Viyana'yı geç de olsa frenle",en:"Tell Russia to 'stop' and rein Vienna in, even if late",kavTr:"Geç itidal",kavEn:"Belated restraint",
+       resTr:"Frene basarsın ama açık çek verdiğin için sözün ağırlığını kaybetmiş. Yine de kanal açık kalır.",
+       resEn:"You brake, but having given a blank check, your word carries less weight. Still, a channel stays open.",
+       anTr:"Bir kez taahhüde girince geri çekilmek maliyetlidir; yine de iletişim yanlış hesabı azaltabilir.",
+       anEn:"Once committed, backing off is costly; still, communication can reduce miscalculation.",esc:-15,to:"w2mediate"}
+    ]},
+  w1b:{phaseTr:"26 Temmuz · Viyana dinlemiyor",phaseEn:"26 July · Vienna won't listen",
+    sTr:"Sınırlı kal çağrın yankı bulmadı; ültimatom yine de sert. Rusya kıpırdanıyor, Fransa Rusya'nın yanında.",
+    sEn:"Your call for restraint went unheeded; the ultimatum is harsh anyway. Russia stirs, and France stands by Russia.",
+    opts:[
+      {tr:"Şimdi tam destek ver, kararlılık göster",en:"Now give full support, show resolve",kavTr:"Güvenilirlik tuzağı",kavEn:"Credibility trap",
+       resTr:"Kararlı görünmek için müttefikinin arkasında tam durursun. Bloklar sertleşir, seferberlik yaklaşır.",
+       resEn:"To look resolute you back your ally fully. The blocs harden and mobilization looms.",
+       anTr:"İtibarı korumak için tırmanmaya katılmak güvenilirlik tuzağıdır: her taraf geri adımı yenilgi sayar.",
+       anEn:"Escalating to protect reputation is a credibility trap: each side treats backing down as defeat.",esc:30,to:"w2"},
+      {tr:"Rusya ve İngiltere ile acil konferans çağrısı yap",en:"Call an urgent conference with Russia and Britain",kavTr:"Kriz sinyali",kavEn:"Crisis signaling",
+       resTr:"Masaya oturma çağrın bazı başkentlerde karşılık bulur. Zaman kazanılır, gerilim biraz düşer.",
+       resEn:"Your call to talk resonates in some capitals. Time is gained and tension eases a little.",
+       anTr:"Niyetini netleştiren bir sinyal belirsizliği azaltır; üçüncü tarafların arabuluculuğu çıkış yaratır.",
+       anEn:"A signal clarifying intent reduces ambiguity; third-party mediation creates an exit.",esc:-10,to:"w2mediate"}
+    ]},
+  w1c:{phaseTr:"27 Temmuz · Konferans masada",phaseEn:"27 July · Conference on the table",
+    sTr:"Arabuluculuk önerin masada. Ama Viyana oyalandığını düşünüyor, Petersburg güvensiz. Pencere daralıyor.",
+    sEn:"Your mediation offer is on the table. But Vienna feels stalled and St. Petersburg is distrustful. The window is closing.",
+    opts:[
+      {tr:"Konferansta ısrar et, herkesi masaya çağır",en:"Insist on the conference, bring everyone to the table",kavTr:"Çok taraflı çözüm",kavEn:"Multilateral resolution",
+       resTr:"Israrın kısmen işe yarar; büyük güçler bir formül üzerinde çalışmaya başlar. Ama Viyana sabırsız.",
+       resEn:"Your insistence partly works; the powers begin working on a formula. But Vienna is impatient.",
+       anTr:"Kurumsallaşmış diyalog belirsizliği azaltır; yine de her aktörü masada tutmak ayrı bir çaba ister.",
+       anEn:"Institutionalized dialogue reduces ambiguity; still, keeping every actor at the table is its own effort.",esc:-15,to:"wConf"},
+      {tr:"Sabrın taşsın, sertleş",en:"Lose patience, harden your stance",kavTr:"Tırmanma",kavEn:"Escalation",
+       resTr:"Diplomasiye güvenini yitirir, blok mantığına dönersin. Seferberlik baskısı yeniden artar.",
+       resEn:"You lose faith in diplomacy and revert to bloc logic. Mobilization pressure rises again.",
+       anTr:"Diplomasiyi erken terk etmek mevcut çıkışı kapatır ve krizi askeri mantığa teslim eder.",
+       anEn:"Abandoning diplomacy early shuts the available exit and hands the crisis to military logic.",esc:20,to:"w2"}
+    ]},
+  wConf:{phaseTr:"28 Temmuz · Konferans mı, savaş mı",phaseEn:"28 July · Conference or war",
+    sTr:"Büyük güçler masaya oturmak üzere. Ama tam o an Avusturya Sırbistan'a savaş ilan ediyor. Süreci kurtarabilir misin?",
+    sEn:"The powers are about to sit down. But at that very moment Austria declares war on Serbia. Can you save the process?",
+    opts:[
+      {tr:"Tüm güçleri masada tut, ateşkes bas",en:"Keep all powers at the table, push a ceasefire",kavTr:"Kriz yönetimi",kavEn:"Crisis management",
+       resTr:"Yoğun diplomasiyle Viyana'yı sınırlı tutar, diğerlerini masada tutarsın. Genel savaş kapıdan döner.",
+       resEn:"Through intense diplomacy you keep Vienna limited and the others at the table. General war is turned away at the door.",
+       anTr:"Zamanında ve kararlı çok taraflı müdahale, yerel bir savaşın kıtasal bir savaşa dönüşmesini engelleyebilir.",
+       anEn:"Timely, determined multilateral action can stop a local war from becoming a continental one.",esc:-20,to:"endPeaceW"},
+      {tr:"Viyana'yı tam destekle, konferansı bırak",en:"Fully back Vienna, abandon the conference",kavTr:"Blok mantığı",kavEn:"Bloc logic",
+       resTr:"Konferans dağılır. Rusya Sırbistan için seferberliğe geçer, zincir gerilir.",
+       resEn:"The conference collapses. Russia mobilizes for Serbia and the chain tightens.",
+       anTr:"İttifak dayanışmasını diplomasinin önüne koymak, çıkış kapısını kapatır.",
+       anEn:"Putting alliance solidarity ahead of diplomacy shuts the exit.",esc:25,to:"wSerbia"}
+    ]},
+  wSerbia:{phaseTr:"29 Temmuz · Belgrad'da dur mu",phaseEn:"29 July · Halt in Belgrade?",
+    sTr:"Avusturya Belgrad'a ilerliyor. Bir fikir dolaşıyor: Avusturya Belgrad'ı alıp dursun, sonra müzakere edilsin. Rusya henüz genel seferberlik ilan etmedi.",
+    sEn:"Austria advances on Belgrade. An idea circulates: let Austria take Belgrade, then halt and negotiate. Russia has not yet ordered general mobilization.",
+    opts:[
+      {tr:"'Belgrad'da dur' planını Viyana'ya dayat",en:"Impose the 'Halt in Belgrade' plan on Vienna",kavTr:"Sınırlı savaş",kavEn:"Limited war",
+       resTr:"Viyana sembolik bir zaferle durur. Savaş Balkanlar'da yerelleşir; kıtasal felaket ertelenir.",
+       resEn:"Vienna halts with a symbolic victory. The war is localized in the Balkans; continental catastrophe is postponed.",
+       anTr:"Sınırlı hedefler belirlemek tırmanmayı frenler; ama çözülmemiş gerilim ileride yeniden patlayabilir.",
+       anEn:"Setting limited objectives brakes escalation; but unresolved tension may erupt again later.",esc:-15,to:"endLimited"},
+      {tr:"Viyana serbest kalsın, Sırbistan tümüyle ezilsin",en:"Let Vienna go all the way, crush Serbia entirely",kavTr:"Sınırsız hedef",kavEn:"Unlimited aims",
+       resTr:"Rusya bunu varoluşsal tehdit sayar ve genel seferberliğe geçer. Takvimler işlemeye başlar.",
+       resEn:"Russia treats this as an existential threat and orders general mobilization. The timetables start running.",
+       anTr:"Sınırsız hedefler karşı tarafa 'ya hep ya hiç' dayatır ve uzlaşma alanını yok eder.",
+       anEn:"Unlimited aims impose 'all or nothing' on the other side and destroy the space for compromise.",esc:25,to:"w2"}
+    ]},
+  w2:{phaseTr:"30 Temmuz · Seferberlik ikilemi",phaseEn:"30 July · The mobilization dilemma",
+    sTr:"Rusya genel seferberlik ilan etti. Savaş planın Fransa'ya Belçika üzerinden saldırmayı gerektiriyor. Kurmaylar 'bir gün gecikme felakettir' diyor.",
+    sEn:"Russia has ordered general mobilization. Your war plan requires attacking France through Belgium. The staff say 'a day's delay is disaster'.",
+    opts:[
+      {tr:"Planı uygula: batıda saldırıya geç",en:"Execute the plan: attack in the west",kavTr:"Güvenlik ikilemi",kavEn:"Security dilemma",
+       resTr:"Ordular Belçika'ya girer. Zincirleme ittifaklar devreye girer; kıta bir anda savaşa sürüklenir.",
+       resEn:"The armies enter Belgium. The chain of alliances activates; the continent is pulled into war at once.",
+       anTr:"Herkes önce vurulmaktan korktuğu için önce vurur — güvenlik ikilemi savaşı kaçınılmaz kılar.",
+       anEn:"Everyone strikes first for fear of being struck first — the security dilemma makes war inevitable.",esc:30,to:"endGreatWar"},
+      {tr:"Seferber ol ama sınırda dur, Rusya'ya durması için süre tanı",en:"Mobilize but hold at the border, give Russia time to stop",kavTr:"Sınırlı seferberlik",kavEn:"Limited mobilization",
+       resTr:"Kurmaylarına karşı çıkarsın. Riskli ama Petersburg'a bir pencere açarsın.",
+       resEn:"You overrule the staff. It is risky, but you open a window to St. Petersburg.",
+       anTr:"Seferberliği saldırıdan ayırmak, otomatik takvimi kırıp diplomasiye alan bırakabilir.",
+       anEn:"Separating mobilization from attack can break the automatic timetable and leave room for diplomacy.",esc:-10,to:"wLast"},
+      {tr:"Karşılıklı seferberliğin durdurulmasını öner",en:"Propose a mutual stand-down of mobilizations",kavTr:"Off-ramp",kavEn:"Off-ramp",
+       resTr:"Telgraf trafiği yeniden canlanır. Herkesin aynı anda durması için bir formül ararsın.",
+       resEn:"Telegraph traffic revives. You seek a formula for everyone to stop at once.",
+       anTr:"Karşılıklı ve eşzamanlı geri adım, kimseyi tek taraflı zayıf bırakmadığı için kabul edilebilir olur.",
+       anEn:"A mutual, simultaneous step-back is acceptable because it leaves no one unilaterally weak.",esc:-25,to:"w2mediate"}
+    ]},
+  wLast:{phaseTr:"31 Temmuz · Sınırda bekleyiş",phaseEn:"31 July · Waiting at the border",
+    sTr:"Ordular sınırda bekliyor. Petersburg'dan çelişkili sinyaller geliyor. Bir hamle daha yapabilirsin.",
+    sEn:"Armies wait at the border. Contradictory signals come from St. Petersburg. You can make one more move.",
+    opts:[
+      {tr:"Doğrudan hükümdar-hükümdar hattını aç, karşılıklı geri çekilme öner",en:"Open the direct sovereign-to-sovereign line, propose mutual pullback",kavTr:"Karşılıklı itidal",kavEn:"Mutual restraint",
+       resTr:"İki taraf da bir adım geri atar. Kriz yerelleşir, genel savaş önlenir.",
+       resEn:"Both sides take a step back. The crisis is localized and general war is averted.",
+       anTr:"Doğrulanabilir karşılıklı itidal, güven açığını kapatarak çözümü mümkün kılar.",
+       anEn:"Verifiable mutual restraint closes the trust gap and makes resolution possible.",esc:-30,to:"endPeaceW"},
+      {tr:"Bekle: önce karşı taraf dursun",en:"Wait: let the other side stop first",kavTr:"Güven açığı",kavEn:"Trust deficit",
+       resTr:"Kimse ilk durmak istemez. Takvimler işlemeye devam eder ve savaş emri kendiliğinden gelir.",
+       resEn:"No one wants to stop first. The timetables keep running and the war order comes on its own.",
+       anTr:"Karşılıklı güvensizlik itidali imkansızlaştırır; herkes rasyonel davranırken sistem savaşa kilitlenir.",
+       anEn:"Mutual distrust makes restraint impossible; everyone acts rationally while the system locks into war.",esc:25,to:"endGreatWar"}
+    ]},
+  w2mediate:{phaseTr:"1 Ağustos · Son telgraflar",phaseEn:"1 August · The last telegrams",
+    sTr:"Başkentler arası son dakika telgrafları uçuşuyor. Herkes karşı tarafın önce durmasını bekliyor.",
+    sEn:"Last-minute telegrams fly between capitals. Everyone waits for the other side to stop first.",
+    opts:[
+      {tr:"Karşılıklı seferberliği geri al, tarafsız arabulucu kabul et",en:"Reverse mobilization mutually, accept a neutral mediator",kavTr:"Karşılıklı itidal",kavEn:"Mutual restraint",
+       resTr:"İki taraf da bir adım geri atar. Kriz yerelleşir, genel savaş önlenir.",
+       resEn:"Both sides take a step back. The crisis is localized and general war is averted.",
+       anTr:"Karşılıklı, doğrulanabilir itidal güven açığını kapatır; kimsenin tek taraflı zayıf düşmemesi çözümü mümkün kılar.",
+       anEn:"Mutual, verifiable restraint closes the trust gap; no one being left unilaterally weak makes resolution possible.",esc:-30,to:"endPeaceW"},
+      {tr:"Bekle: önce karşı taraf dursun",en:"Wait: let the other side stop first",kavTr:"Güven açığı",kavEn:"Trust deficit",
+       resTr:"Kimse ilk durmak istemez. Takvimler işler ve savaş emri kendiliğinden gelir.",
+       resEn:"No one wants to stop first. The timetables run and the war order comes on its own.",
+       anTr:"Karşılıklı güvensizlik itidali imkansızlaştırır; sistem rasyonel aktörleri savaşa kilitler.",
+       anEn:"Mutual distrust makes restraint impossible; the system locks rational actors into war.",esc:20,to:"endGreatWar"}
+    ]},
+  endPeaceW:{end:true,tone:"good",tagTr:"Çözüm · Savaş önlendi",tagEn:"Resolution · War averted",tTr:"Yerelleşen Kriz",tEn:"A Crisis Contained",
+    xTr:"Büyük güçler masaya oturur, kriz Balkanlar'da yerelleşir. 1914 yazının 'kaçınılmaz' savaşı aslında bir tercihmiş.",
+    xEn:"The powers sit down and the crisis is contained. The 'inevitable' war of summer 1914 turns out to have been a choice.",
+    dTr:["Avrupa Ahengi mantığı: kurumsallaşmış çok taraflı diyalog krizleri yerelleştirebilir.","Müttefiki frenlemek zincire vurulmaktan daha güvenlidir.","Net kriz sinyalleri belirsizliği ve yanlış hesabı azaltır.","Seferberliği saldırıdan ayırıp diplomasiye alan açmak sarmalı durdurur."],
+    dEn:["Concert-of-Europe logic: institutionalized multilateral dialogue can localize crises.","Restraining an ally is safer than being chain-ganged.","Clear crisis signals reduce ambiguity and miscalculation.","Separating mobilization from attack to give diplomacy room stops the spiral."]},
+  endLimited:{end:true,tone:"mixed",tagTr:"Kısmi · Yerel savaş",tagEn:"Partial · Local war",tTr:"Sınırlı Kalan Ateş",tEn:"A Fire Kept Local",
+    xTr:"Avusturya-Sırbistan savaşı yerel kalır, genel savaş ertelenir. Ama Balkanlar'daki gerilim çözülmeden kabuk bağlar.",
+    xEn:"The Austro-Serbian war stays local and general war is postponed. But the Balkan tension scabs over unresolved.",
+    dTr:["Sınırlı hedefler tırmanmayı frenler ama kriz kaynağını ortadan kaldırmaz.","'Belgrad'da dur' gibi yüz kurtaran formüller zaman kazandırır.","Ertelenen çatışmalar, koşullar değişmezse yeniden alevlenebilir."],
+    dEn:["Limited aims brake escalation but do not remove the source of crisis.","Face-saving formulas like 'Halt in Belgrade' buy time.","Postponed conflicts can reignite if the underlying conditions do not change."]},
+  endGreatWar:{end:true,tone:"bad",tagTr:"Felaket · Genel savaş",tagEn:"Catastrophe · General war",tTr:"Uyurgezerlerin Savaşı",tEn:"The Sleepwalkers' War",
+    xTr:"Zincirleme ittifaklar ve seferberlik takvimleri devreye girer; Avrupa dört yıl sürecek bir savaşa uyanır.",
+    xEn:"The chain of alliances and mobilization timetables activate; Europe wakes into a war that will last four years.",
+    dTr:["Zincire vurulma: bir müttefikin pervasızlığı tüm sistemi savaşa çekebilir.","Güvenlik ikilemi + saldırı kültürü: herkes önce vurmaktan korkunca önce vurur.","Seferberlik sarmalı kararları otomatikleştirir; insan iradesi devreden çıkar.","Güvenilirlik tuzağı: geri adımı yenilgi sayan liderler tırmanmayı seçer."],
+    dEn:["Chain-ganging: one ally's recklessness can drag the whole system into war.","Security dilemma + cult of the offensive: fearing the first blow, everyone strikes first.","The mobilization spiral automates decisions; human agency drops out.","The credibility trap: leaders who equate backing down with defeat choose escalation."]}
+ }
+},
+ukr:{
+ titleTr:"Ukrayna Krizi",titleEn:"The Ukraine Crisis",year:"2022",
+ descTr:"Sınırda büyük bir yığınak var, Moskova güvenlik garantileri istiyor. Bir Batı/NATO karar alıcısısın. Caydırıcılık, yaptırım ve nükleer sinyaller sahnede.",
+ descEn:"A massive buildup on the border; Moscow demands security guarantees. You are a Western/NATO decision-maker. Deterrence, sanctions and nuclear signals are all in play.",
+ roleTr:"Rol: Batı/NATO karar alıcısı · 2021–2022",roleEn:"Role: Western/NATO decision-maker · 2021–2022",start:"u0",
+ nodes:{
+  u0:{phaseTr:"Kış · Yığınak",phaseEn:"Winter · The buildup",
+    sTr:"İstihbarat, Ukrayna sınırında büyük bir askeri yığınak gösteriyor. Moskova Ukrayna'nın asla NATO'ya girmemesi için garanti istiyor. Nasıl caydıracaksın?",
+    sEn:"Intelligence shows a large military buildup on Ukraine's border. Moscow demands a guarantee that Ukraine will never join NATO. How do you deter?",
+    opts:[
+      {tr:"Kamuoyu önünde uyar, ağır yaptırım tehdit et, Kiev'e silah gönder",en:"Warn publicly, threaten heavy sanctions, send arms to Kyiv",kavTr:"Cezalandırmayla caydırma",kavEn:"Deterrence by punishment",
+       resTr:"Kararlılık gösterirsin ama Moskova bunu kuşatılma olarak okur ve yığınağı sürdürür.",
+       resEn:"You show resolve, but Moscow reads it as encirclement and continues the buildup.",
+       anTr:"Cezalandırma tehdidi caydırabilir; ama tehdidin inandırıcı ve maliyetin karşı tarafça yüksek algılanması gerekir.",
+       anEn:"A punishment threat can deter; but it must be credible and the cost must be perceived as high by the other side.",esc:20,to:"u1"},
+      {tr:"Müzakere et: NATO'nun açık kapısında esneklik sinyali ver, güvenlik kaygılarını konuş",en:"Negotiate: signal flexibility on NATO's open door, discuss the security concerns",kavTr:"Caydırma mı yatıştırma mı",kavEn:"Deter or appease",
+       resTr:"Gerilim geçici olarak düşer. Ama kimileri bunu zorlamaya ödül verme, kimileri makul bir uzlaşma sayar.",
+       resEn:"Tension drops temporarily. But some call it rewarding coercion, others a reasonable accommodation.",
+       anTr:"Bir görüşe göre NATO genişlemesi güvenlik ikilemini besledi; diğer görüşe göre devletlerin ittifak seçme egemen hakkı esastır. Bu gerilim tartışmanın özüdür.",
+       anEn:"One view holds NATO enlargement fed a security dilemma; another holds states' sovereign right to choose alliances is paramount. This tension is the heart of the debate.",esc:-10,to:"u1dip"},
+      {tr:"Doğu üyelerine NATO 'tel örgü' kuvveti yerleştir, kanalları açık tut",en:"Deploy NATO tripwire forces to eastern members, keep channels open",kavTr:"Caydırma + güvence",kavEn:"Deterrence + reassurance",
+       resTr:"Müttefiklerine güven verirsin ve kararlılığını gösterirsin, ama Ukrayna hâlâ NATO dışında ve savunmasız.",
+       resEn:"You reassure allies and show resolve, but Ukraine is still outside NATO and exposed.",
+       anTr:"Genişletilmiş caydırıcılık, üyelere güvence verirken üye olmayanı korumaz — taahhüdün sınırı sinyalin de sınırıdır.",
+       anEn:"Extended deterrence reassures members but does not protect a non-member — the limit of the commitment is the limit of the signal.",esc:10,to:"u1"}
+    ]},
+  u1:{phaseTr:"Şubat · İşgal",phaseEn:"February · The invasion",
+    sTr:"Caydırıcılık tuttu tutmadı derken Rusya işgale başladı. Egemen bir devletin sınırları çiğnendi. Yanıtın ne olacak?",
+    sEn:"Deterrence has failed and Russia begins its invasion. A sovereign state's borders are violated. What is your response?",
+    opts:[
+      {tr:"Doğrudan NATO müdahalesi / uçuşa yasak bölge",en:"Direct NATO intervention / a no-fly zone",kavTr:"Doğrudan çatışma riski",kavEn:"Risk of direct war",
+       resTr:"İki nükleer güç doğrudan karşı karşıya gelir. Küçük bir olay felakete dönüşebilir.",
+       resEn:"Two nuclear powers come into direct contact. A small incident could turn catastrophic.",
+       anTr:"Nükleer güçler arası doğrudan çatışma, tırmanmayı kontrol edilemez kılar; caydırıcılık bu eşikte 'kırmızı çizgi' üretir.",
+       anEn:"Direct war between nuclear powers makes escalation uncontrollable; at this threshold deterrence produces a hard 'red line'.",esc:35,to:"uNuke"},
+      {tr:"Asker yok; ağır yaptırım + büyük silah desteği + diplomatik izolasyon",en:"No troops; heavy sanctions + major arms + diplomatic isolation",kavTr:"Dolaylı destek",kavEn:"Indirect support",
+       resTr:"Doğrudan çatışmadan kaçınırken maliyet dayatırsın. Savaş uzayabilir ama tırmanma kontrol altında.",
+       resEn:"You avoid direct war while imposing costs. The war may drag on, but escalation stays controlled.",
+       anTr:"Dolaylı destek + ekonomik zorlama, savaşan tarafa yük bindirir ve doğrudan çatışma eşiğinin altında kalır (escalation control).",
+       anEn:"Indirect support plus economic coercion burdens the belligerent while staying below the direct-war threshold (escalation control).",esc:15,to:"u2"},
+      {tr:"Sınırlı tepki, derhal ateşkes görüşmelerine öncelik ver",en:"Limited response, prioritize immediate ceasefire talks",kavTr:"Erken müzakere",kavEn:"Early negotiation",
+       resTr:"Çatışmayı hızla bitirmeyi denersin. Ama masadaki şartlar saldırganın kazanımlarını dondurabilir.",
+       resEn:"You try to end the fighting fast. But the terms on offer may freeze the aggressor's gains.",
+       anTr:"Erken müzakere kan kaybını durdurabilir; ama zorla elde edilen kazanımları meşrulaştırma riski taşır.",
+       anEn:"Early negotiation can stop the bleeding; but it risks legitimizing gains taken by force.",esc:-5,to:"u2talks"}
+    ]},
+  u1dip:{phaseTr:"Diplomasi · Kavşak",phaseEn:"Diplomacy · Crossroads",
+    sTr:"Görüşmeler tansiyonu düşürdü. Moskova kısmen geri çekilir gibi. Ama bunun bir taktik mola mı yoksa gerçek bir çözüm mü olduğu belirsiz.",
+    sEn:"Talks have eased tension. Moscow appears to partly pull back. But whether this is a tactical pause or a real settlement is unclear.",
+    opts:[
+      {tr:"Süreci resmileştir: Ukrayna tarafsızlığı üzerine anlaş",en:"Formalize it: agree on Ukrainian neutrality",kavTr:"Pazarlıkla çözüm",kavEn:"Negotiated settlement",
+       resTr:"Savaş önlenir. Ama üçüncü bir devletin geleceği onun başının üstünden pazarlık edilmiştir.",
+       resEn:"War is averted. But a third state's future has been bargained over its head.",
+       anTr:"Bir görüşe göre bu, akılcı bir uzlaşmadır; diğerine göre zorlamaya ödül vererek gelecekteki caydırıcılığı zayıflatır.",
+       anEn:"One view calls this a rational accommodation; another says it rewards coercion and weakens future deterrence.",esc:-20,to:"endNeutral"},
+      {tr:"Müzakere ederken caydırıcı duruşu koru, garantiye bağlama",en:"Keep the deterrent posture while negotiating, don't lock in",kavTr:"Riskten korunma",kavEn:"Hedging",
+       resTr:"Aldatılma riskine karşı korunursun. Moskova blöf yapıyorsa hazırlıklısın.",
+       resEn:"You hedge against being deceived. If Moscow is bluffing, you are ready.",
+       anTr:"Belirsizlik altında hem diyalog hem hazırlık — riski dağıtan bir strateji, ama sinyalini bulanıklaştırabilir.",
+       anEn:"Under uncertainty, both dialogue and readiness — a risk-spreading strategy, though it can blur your signal.",esc:5,to:"u1"}
+    ]},
+  u2talks:{phaseTr:"Erken masa",phaseEn:"The early table",
+    sTr:"Ateşkes görüşmeleri başladı. Moskova, ele geçirdiği bölgeleri koruyan şartlar öneriyor.",
+    sEn:"Ceasefire talks begin. Moscow proposes terms that preserve the territory it has seized.",
+    opts:[
+      {tr:"Hızlı anlaşmayı kabul et, toprak karşılığı barış",en:"Accept the quick deal, land for peace",kavTr:"Zorlamaya ödül",kavEn:"Rewarding coercion",
+       resTr:"Silahlar susar ama saldırgan kazanır. Diğer revizyonist aktörler ders çıkarır.",
+       resEn:"The guns fall silent but the aggressor wins. Other revisionist actors take note.",
+       anTr:"Zorla toprak değişimini kabul etmek, egemenlik ve sınırların dokunulmazlığı normunu aşındırır.",
+       anEn:"Accepting territorial change by force erodes the norm of sovereignty and the inviolability of borders.",esc:-10,to:"endCoerced"},
+      {tr:"Reddet, sağlam desteğe geç",en:"Reject it, shift to firm support",kavTr:"Norm savunusu",kavEn:"Defending the norm",
+       resTr:"Şartları reddedersin ve dayanıklı destek hattına geçersin. Savaş sürer ama norm korunur.",
+       resEn:"You reject the terms and move to durable support. The war continues but the norm is defended.",
+       anTr:"Kısa vadeli barış ile uzun vadeli norm arasındaki gerilim, kriz kararlarının klasik ikilemidir.",
+       anEn:"The tension between short-term peace and the long-term norm is a classic dilemma of crisis decisions.",esc:10,to:"u2"}
+    ]},
+  u2:{phaseTr:"Mart · Nükleer sinyal",phaseEn:"March · Nuclear signal",
+    sTr:"Batı müdahalesini caydırmak için Moskova nükleer güçlerini alarma geçiriyor ve üstü örtülü tehditler savuruyor.",
+    sEn:"To deter Western involvement, Moscow raises its nuclear forces' alert and issues veiled threats.",
+    opts:[
+      {tr:"Karşılık ver: kendi alarmını yükselt, tehdit et",en:"Match it: raise your own alert, threaten back",kavTr:"Nükleer tırmanma",kavEn:"Nuclear escalation",
+       resTr:"Karşılıklı tehdit sarmalı başlar. Herhangi bir yanlış okuma felakete yol açabilir.",
+       resEn:"A mutual threat spiral begins. Any misreading could lead to catastrophe.",
+       anTr:"Nükleer retoriği aynen karşılamak kararlılık gösterir ama yanlış hesap riskini tehlikeli biçimde artırır.",
+       anEn:"Mirroring nuclear rhetoric shows resolve but dangerously raises the risk of miscalculation.",esc:35,to:"uNuke"},
+      {tr:"Sakin ama kararlı ol: retoriğe kapılma, bu tehditlerin işe yaramayacağını göster",en:"Stay calm but firm: don't mirror the rhetoric, show these threats won't work",kavTr:"Nükleer blöfü etkisizleştirme",kavEn:"Deflating the bluff",
+       resTr:"Desteği sürdürür, panik satmazsın. Nükleer tehdit bir zorlama aracı olarak değerini yitirir.",
+       resEn:"You continue support without selling panic. The nuclear threat loses value as a coercive tool.",
+       anTr:"Nükleer tehditlere abartılı tepki vermemek, onları bir zorlama aracı olmaktan çıkarır (deterrence by denial of coercion).",
+       anEn:"Refusing to over-react to nuclear threats strips them of coercive value (denying the coercion its payoff).",esc:0,to:"u3"},
+      {tr:"Temkinli ol: desteği geri çek",en:"Be cautious: pull back support",kavTr:"Zorlama başarılı",kavEn:"Coercion succeeds",
+       resTr:"Tehdit işe yarar. Moskova nükleer sinyalin bir kazanç getirdiğini öğrenir.",
+       resEn:"The threat works. Moscow learns that nuclear signaling pays off.",
+       anTr:"Nükleer şantaja boyun eğmek, bu aracın gelecekte tekrar kullanılmasını teşvik eder.",
+       anEn:"Yielding to nuclear blackmail encourages the tool's repeated future use.",esc:-15,to:"u3weak"}
+    ]},
+  uNuke:{phaseTr:"En yüksek alarm",phaseEn:"Maximum alert",
+    sTr:"İki taraf da en yüksek nükleer alarmda. Erken uyarı sistemleri hassas, iletişim gergin. Bir pencere kaldı.",
+    sEn:"Both sides are at maximum nuclear alert. Early-warning systems are jittery, communication is tense. One window remains.",
+    opts:[
+      {tr:"Arka kanaldan geri adım: gerilimi düşür, kanalları aç",en:"Step back via back channel: de-escalate, open channels",kavTr:"Tırmanmadan kaçınma",kavEn:"De-escalation",
+       resTr:"Gizli görüşmelerle iki taraf da alarmı düşürür. Uçurumdan geri dönülür.",
+       resEn:"Secret talks bring both sides down from alert. You step back from the brink.",
+       anTr:"En tehlikeli anda bile açık iletişim ve kademeli geri adım, kazayla savaşı önler.",
+       anEn:"Even at the most dangerous moment, open communication and graduated de-escalation prevent war by accident.",esc:-20,to:"u3"},
+      {tr:"Sarsılma: sert dur, ilk göz kırpanı bekle",en:"Don't blink: hold hard, wait for the other to flinch",kavTr:"Nükleer uçurum kenarı",kavEn:"Nuclear brinkmanship",
+       resTr:"Bir erken uyarı hatası ya da yerel komutan kararı zinciri koparır. Kimsenin kazanmadığı bir sona doğru.",
+       resEn:"An early-warning glitch or a local commander's decision snaps the chain. Toward an end no one wins.",
+       anTr:"Nükleer eşikte uçurum kenarı taktiği, kaza olasılığını kabul edilemez düzeye çıkarır.",
+       anEn:"At the nuclear threshold, brinkmanship pushes the probability of accident to unacceptable levels.",esc:30,to:"endCatastrophe"}
+    ]},
+  u3:{phaseTr:"Yıpratma · İç cephe",phaseEn:"Attrition · The home front",
+    sTr:"Savaş uzuyor. Enerji fiyatları ve enflasyon iç kamuoyunu zorluyor, bazı müttefiklerde yorgunluk başlıyor. Nasıl devam edeceksin?",
+    sEn:"The war drags on. Energy prices and inflation strain the public at home, and fatigue appears among some allies. How do you proceed?",
+    opts:[
+      {tr:"Desteği tırmandır: derin vuruş yapan uzun menzilli silahlar ver",en:"Escalate aid: provide long-range weapons for deep strikes",kavTr:"Tırmanma kontrolü",kavEn:"Escalation control",
+       resTr:"Savaşan tarafı güçlendirirsin ama karşı tarafın kırmızı çizgilerine yaklaşırsın.",
+       resEn:"You strengthen the belligerent but move closer to the other side's red lines.",
+       anTr:"Yeteneği artırmak baskıyı yükseltir; ama her yeni eşik tırmanma kontrolünü zorlaştırır.",
+       anEn:"Boosting capability raises pressure; but each new threshold makes escalation control harder.",esc:15,to:"u4"},
+      {tr:"Sabit tut: yardımı ve yaptırımları sürdür, koalisyon birliğini koru",en:"Hold steady: sustain aid and sanctions, keep the coalition united",kavTr:"İttifak bütünlüğü",kavEn:"Alliance cohesion",
+       resTr:"İstikrarlı destek sağlarsın. Asıl sınav, ekonomik yük altında koalisyonu bir arada tutmaktır.",
+       resEn:"You provide steady support. The real test is holding the coalition together under economic strain.",
+       anTr:"Uzun krizlerde belirleyici olan silah değil, dayanıklılık ve ittifak dayanışmasıdır (burden-sharing).",
+       anEn:"In long crises the decisive factor is not weapons but endurance and alliance solidarity (burden-sharing).",esc:0,to:"u4"},
+      {tr:"İç maliyeti azaltmak için Kiev'e müzakere baskısı yap",en:"Pressure Kyiv to negotiate to ease costs at home",kavTr:"Kamuoyu maliyetleri",kavEn:"Audience costs",
+       resTr:"Ekonomik baskıyı hafifletirsin ama savaşan ortağını zayıf bir masaya oturmaya zorlarsın.",
+       resEn:"You ease the economic pressure but push your fighting partner to a weak negotiating table.",
+       anTr:"İç kamuoyu maliyetleri dış politikayı sınırlar; liderler çoğu zaman iki masada aynı anda oynar (two-level game).",
+       anEn:"Domestic audience costs constrain foreign policy; leaders often play at two tables at once (two-level game).",esc:-10,to:"u4talks"}
+    ]},
+  u3weak:{phaseTr:"Geri çekilme sonrası",phaseEn:"After the pullback",
+    sTr:"Desteği geri çektin. Saldırgan ilerliyor, müttefiklerin senin güvenilirliğini sorguluyor.",
+    sEn:"You pulled back support. The aggressor advances, and your allies question your credibility.",
+    opts:[
+      {tr:"Kararını savun, sınırlı temasla idare et",en:"Defend the decision, manage with limited engagement",kavTr:"Güvenilirlik erozyonu",kavEn:"Credibility erosion",
+       resTr:"Krizi yönetirsin ama caydırıcı sözlerinin ağırlığı kalıcı olarak azalır.",
+       resEn:"You manage the crisis, but the weight of your deterrent word is permanently reduced.",
+       anTr:"Bir kez boyun eğmek, gelecekteki tüm caydırıcı tehditlerinin inandırıcılığını düşürür.",
+       anEn:"Yielding once lowers the credibility of all your future deterrent threats.",esc:-5,to:"endCoerced"},
+      {tr:"Rota değiştir: geç de olsa desteğe geri dön",en:"Reverse course: return to support, even if late",kavTr:"İtibar onarımı",kavEn:"Reputation repair",
+       resTr:"Kararlılığı yeniden kurmaya çalışırsın ama zaman ve güven kaybı telafisi zor bir maliyet bırakır.",
+       resEn:"You try to rebuild resolve, but the lost time and trust leave a cost that is hard to recover.",
+       anTr:"İtibar hızlı yıkılır, yavaş onarılır; tutarlılık caydırıcılığın temelidir.",
+       anEn:"Reputation collapses fast and rebuilds slowly; consistency is the foundation of deterrence.",esc:5,to:"endCoerced"}
+    ]},
+  u4:{phaseTr:"Çıkış arayışı",phaseEn:"Seeking an exit",
+    sTr:"Cephe ağırlaşıyor. Masada güvenlik garantileri içeren bir ateşkes önerisi var. Bir karar zamanı.",
+    sEn:"The front grinds down. A ceasefire proposal with security guarantees is on the table. Decision time.",
+    opts:[
+      {tr:"Güvenlik garantileriyle pazarlıklı çözüme it, hatları dondur",en:"Push a negotiated settlement with guarantees, freeze the lines",kavTr:"Yüz kurtaran çıkış",kavEn:"Face-saving exit",
+       resTr:"Savaş durur ama sınırlar belirsiz kalır. Kırılgan ama yaşayan bir barış.",
+       resEn:"The war stops but the borders stay unsettled. A fragile but living peace.",
+       anTr:"Her iki tarafa da yüz kurtaracak bir çıkış sunmak, mükemmel olmasa da savaşı bitiren bir çözümdür.",
+       anEn:"Offering both sides a face-saving exit is a solution that ends the war even if it is imperfect.",esc:-20,to:"endSettle"},
+      {tr:"Reddet: kesin sonuç için tam kurtuluşu destekle",en:"Reject it: back full liberation for a decisive outcome",kavTr:"Kesin zafer arayışı",kavEn:"Search for decisive victory",
+       resTr:"Uzun ve yıpratıcı bir savaşa girersin. Sonuç belirsiz, maliyet ağır.",
+       resEn:"You enter a long war of attrition. The outcome is uncertain, the cost heavy.",
+       anTr:"Kesin zafer arayışı, savaşı uzatarak tırmanma ve tükeniş risklerini büyütür.",
+       anEn:"The search for decisive victory prolongs the war and magnifies escalation and exhaustion risks.",esc:10,to:"endLongWar"},
+      {tr:"Sürdürülebilir uzun vadeli destek + masayı açık tut",en:"Sustainable long-term support + keep the table open",kavTr:"Stratejik sabır",kavEn:"Strategic patience",
+       resTr:"Ne pes eder ne pervasızca tırmandırırsın. İttifakı ayakta tutar, çıkışa alan bırakırsın.",
+       resEn:"You neither give up nor escalate recklessly. You keep the alliance standing and leave room for an exit.",
+       anTr:"Maliyetli ama ilkeli bir denge: caydırıcılığı korurken diplomasi kapısını kapatmamak.",
+       anEn:"A costly but principled balance: preserving deterrence while keeping the door to diplomacy open.",esc:-5,to:"endResilient"}
+    ]},
+  u4talks:{phaseTr:"Baskı altında masa",phaseEn:"The table under pressure",
+    sTr:"İç baskıyla müzakereye yöneldin. Ortağın isteksiz ama masaya oturuyor.",
+    sEn:"Under domestic pressure you turned to talks. Your partner is reluctant but comes to the table.",
+    opts:[
+      {tr:"Dondurulmuş hatlarla pazarlıklı ateşkesi kabul et",en:"Accept a negotiated ceasefire with frozen lines",kavTr:"Dondurulmuş çatışma",kavEn:"Frozen conflict",
+       resTr:"Savaş durur ama çözülmemiş bir sınır ve kalıcı bir gerilim kalır.",
+       resEn:"The war stops but an unresolved border and a lasting tension remain.",
+       anTr:"Dondurulmuş çatışmalar kan kaybını durdurur ama krizi kronikleştirir.",
+       anEn:"Frozen conflicts stop the bleeding but make the crisis chronic.",esc:-15,to:"endSettle"},
+      {tr:"Masadan kalk, yeniden sağlam desteğe dön",en:"Leave the table, return to firm support",kavTr:"Stratejik sabır",kavEn:"Strategic patience",
+       resTr:"İç maliyeti göze alıp ilkeli hatta dönersin. Zor ama tutarlı bir çizgi.",
+       resEn:"You accept the domestic cost and return to the principled line. A hard but consistent course.",
+       anTr:"İç maliyetle dış tutarlılık arasında seçim, iki düzeyli oyunun özüdür.",
+       anEn:"Choosing between domestic cost and external consistency is the essence of the two-level game.",esc:5,to:"endResilient"}
+    ]},
+  endResilient:{end:true,tone:"good",tagTr:"Dayanıklı denge",tagEn:"Resilient balance",tTr:"İlkeli ve Ayakta",tEn:"Principled and Standing",
+    xTr:"Ne pervasız tırmanma ne teslimiyet. İttifak bütünlüğünü koruyup egemenlik normunu savunurken doğrudan savaştan kaçınırsın; caydırıcılık zamanla yeniden kurulur.",
+    xEn:"Neither reckless escalation nor surrender. You preserve alliance cohesion and defend the sovereignty norm while avoiding direct war; deterrence is gradually restored.",
+    dTr:["Dolaylı destek + tırmanma kontrolü, doğrudan savaş eşiğinin altında baskı üretir.","Nükleer tehdide abartılı tepki vermemek, şantajın değerini düşürür.","İttifak dayanışması ve dayanıklılık, uzun krizlerde silahtan daha belirleyicidir.","Caydırıcılık korunurken diplomasi kapısı açık tutulabilir."],
+    dEn:["Indirect support + escalation control produces pressure below the direct-war threshold.","Not over-reacting to a nuclear threat lowers the blackmail's value.","Alliance solidarity and endurance matter more than weapons in long crises.","Deterrence can be preserved while keeping the door to diplomacy open."]},
+  endSettle:{end:true,tone:"mixed",tagTr:"Kırılgan barış",tagEn:"Fragile peace",tTr:"Donmuş Hatlar",tEn:"Frozen Lines",
+    xTr:"Savaş durur, ama sınırlar ve statü belirsiz kalır. Kan kaybı biter, gerilim kronikleşir.",
+    xEn:"The war stops, but borders and status remain unsettled. The bleeding ends, the tension becomes chronic.",
+    dTr:["Yüz kurtaran çıkışlar savaşı bitirir ama kök sorunu çözmez.","Dondurulmuş çatışmalar geleceğe ertelenmiş krizlerdir.","Kısa vadeli barış ile kalıcı norm arasındaki denge her zaman kusurludur."],
+    dEn:["Face-saving exits end the war but do not resolve the root problem.","Frozen conflicts are crises deferred to the future.","The balance between short-term peace and a lasting norm is always imperfect."]},
+  endLongWar:{end:true,tone:"mixed",tagTr:"Uzun savaş",tagEn:"Long war",tTr:"Yıpratma Savaşı",tEn:"A War of Attrition",
+    xTr:"Kesin sonuç arayışı savaşı uzatır. Maliyet ağırlaşır, sonuç belirsiz kalır, tırmanma riski canlı durur.",
+    xEn:"The search for a decisive outcome prolongs the war. Costs mount, the result stays uncertain, escalation risk remains live.",
+    dTr:["Sınırsız hedefler savaşı uzatır ve tükenişi derinleştirir.","Uzayan savaşlarda tırmanma penceresi hiç kapanmaz.","Zafer ile sürdürülebilirlik arasındaki gerilim strateji sınavının özüdür."],
+    dEn:["Unlimited aims prolong the war and deepen exhaustion.","In protracted wars the escalation window never fully closes.","The tension between victory and sustainability is the core test of strategy."]},
+  endCoerced:{end:true,tone:"mixed",tagTr:"Zorlama ödüllendi",tagEn:"Coercion rewarded",tTr:"Sarsılan Caydırıcılık",tEn:"Deterrence Undermined",
+    xTr:"Kriz biter ama saldırgan kazanımlarını korur. Egemenlik normu ve caydırıcılığının kredisi zedelenir; başka aktörler ders çıkarır.",
+    xEn:"The crisis ends but the aggressor keeps its gains. The sovereignty norm and your deterrent credit are damaged; other actors take note.",
+    dTr:["Zorla toprak değişimini kabul etmek, sınırların dokunulmazlığı normunu aşındırır.","Nükleer şantaja boyun eğmek aracın tekrar kullanımını teşvik eder.","İtibar hızlı yıkılır, yavaş onarılır; tutarlılık caydırıcılığın temelidir."],
+    dEn:["Accepting territorial change by force erodes the norm of inviolable borders.","Yielding to nuclear blackmail encourages its repeated use.","Reputation collapses fast and rebuilds slowly; consistency is the foundation of deterrence."]},
+  endNeutral:{end:true,tone:"mixed",tagTr:"Pazarlıkla tarafsızlık",tagEn:"Negotiated neutrality",tTr:"Masada Çözülen Kriz",tEn:"A Crisis Settled at the Table",
+    xTr:"Savaş, Ukrayna tarafsızlığı üzerine bir anlaşmayla önlenir. Kimileri bunu akılcı uzlaşma, kimileri zorlamaya ödül sayar — tartışma açık kalır.",
+    xEn:"War is averted through a deal on Ukrainian neutrality. Some call it a rational accommodation, others rewarding coercion — the debate stays open.",
+    dTr:["Yatıştırma mı caydırma mı: aynı hamle bağlama göre iki farklı okumaya açıktır.","Bir devletin geleceğini başının üstünden pazarlamak, self-determinasyon normuyla gerilir.","Savaşı önlemek ile normu korumak her zaman aynı yöne işaret etmez."],
+    dEn:["Appeasement or deterrence: the same move is open to two readings depending on context.","Bargaining over a state's future above its head clashes with the self-determination norm.","Averting war and defending the norm do not always point the same way."]},
+  endCatastrophe:{end:true,tone:"bad",tagTr:"Felaket · Nükleer eşik",tagEn:"Catastrophe · Nuclear threshold",tTr:"Göz Kırpmayan Taraf Yok",tEn:"No One Blinked",
+    xTr:"Nükleer uçurum kenarında kimse geri adım atmadı. Bir kaza ya da yanlış okuma zinciri kopardı; kimsenin kazanmadığı bir son.",
+    xEn:"At the nuclear brink no one stepped back. An accident or misreading snapped the chain; an end no one wins.",
+    dTr:["Nükleer eşikte uçurum kenarı taktiği kaza riskini kabul edilemez düzeye çıkarır.","Karşılıklı nükleer sinyal sarmalı yanlış hesaba karşı savunmasızdır.","Caydırıcılık ancak iletişim ve geri adım kanalları açıkken güvenlidir."],
+    dEn:["At the nuclear threshold, brinkmanship raises accident risk to unacceptable levels.","A mutual nuclear-signaling spiral is defenseless against miscalculation.","Deterrence is only safe while communication and off-ramp channels stay open."]}
+ }
+}
+};
+
+/* ============ ENGINE ============ */
+$("langSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;lang=b.dataset.lang;[...$("langSeg").children].forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));renderMenu();});
+function TT(o,k){return o[k+(lang==="tr"?"Tr":"En")];}
+function renderMenu(){
+  $("menuBtn").textContent=UI[lang].menuBtn;
+  $("scenList").innerHTML="";
+  Object.keys(SCEN).forEach(key=>{
+    const s=SCEN[key];const b=document.createElement("button");
+    b.innerHTML=`<div class="st"><span>${TT(s,"title")}</span><span class="sy">${s.year}</span></div><div class="sd">${TT(s,"desc")}</div>`;
+    b.addEventListener("click",()=>startScenario(key));
+    $("scenList").appendChild(b);
+  });
+}
+function startScenario(key){SC=SCEN[key];esc=40;steps=0;trail=[];$("menu").classList.add("hidden");$("sim").classList.remove("hidden");$("hTitle").textContent=TT(SC,"title")+" · "+SC.year;$("hRole").textContent=TT(SC,"role");$("mLabel").textContent=UI[lang].esc;$("menuBtn").textContent=UI[lang].menuBtn;goNode(SC.start);}
+function zone(v){return v<=30?0:v<=60?1:v<=85?2:3;}
+function zoneColor(z){return ["var(--green)","var(--brass)","var(--amber)","var(--classified)"][z];}
+function renderMeter(){const z=zone(esc);$("mFill").style.width=Math.max(4,Math.min(100,esc))+"%";$("mFill").style.background=zoneColor(z);$("mZone").textContent=UI[lang].zones[z];$("mZone").style.color=zoneColor(z);$("mProg").textContent=UI[lang].step+" "+steps;}
+function goNode(id){
+  cur=SC.nodes[id];
+  $("resultCard").classList.add("hidden");
+  if(cur.end){renderEnd();return;}
+  $("endCard").classList.add("hidden");
+  $("sitCard").classList.remove("hidden");
+  $("sPhase").textContent=TT(cur,"phase");
+  $("sText").textContent=TT(cur,"s");
+  renderMeter();
+  const box=$("sOptions");box.innerHTML="";
+  cur.opts.forEach((o,i)=>{const b=document.createElement("button");b.className="opt";b.innerHTML=`<span class="ono">${String.fromCharCode(65+i)}</span><span>${o[lang]}</span>`;b.addEventListener("click",()=>choose(o));box.appendChild(b);});
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function choose(o){steps++;trail.push(TT(o,"kav"));esc=Math.max(0,Math.min(100,esc+(o.esc||0)));pending=o.to;$("sitCard").classList.add("hidden");$("rLabel").textContent=UI[lang].result;$("rText").textContent=TT(o,"res");$("rChip").textContent=TT(o,"kav");$("rAnalysis").textContent=TT(o,"an");$("contBtn").textContent=UI[lang].cont;$("resultCard").classList.remove("hidden");renderMeter();window.scrollTo({top:0,behavior:"smooth"});}
+$("contBtn").addEventListener("click",()=>goNode(pending));
+function renderEnd(){$("sitCard").classList.add("hidden");$("resultCard").classList.add("hidden");$("endCard").classList.remove("hidden");$("eTag").textContent=TT(cur,"tag");$("eTag").className="endtag "+cur.tone;$("eTitle").textContent=TT(cur,"t");$("eText").textContent=TT(cur,"x");$("eDebriefLabel").textContent=UI[lang].debrief;$("eDebrief").innerHTML=(lang==="tr"?cur.dTr:cur.dEn).map(x=>`<li>${x}</li>`).join("");$("ePath").innerHTML=`<b>${UI[lang].path}:</b> `+trail.join(" → ");$("againBtn").textContent=UI[lang].again;$("toMenuBtn").textContent=UI[lang].menu;renderMeter();window.scrollTo({top:0,behavior:"smooth"});}
+$("againBtn").addEventListener("click",()=>{esc=40;steps=0;trail=[];goNode(SC.start);});
+$("menuBtn").addEventListener("click",toMenu);
+$("toMenuBtn").addEventListener("click",toMenu);
+function toMenu(){$("sim").classList.add("hidden");$("menu").classList.remove("hidden");renderMenu();}
+renderMenu();
+</script>
+</body>
+</html>
