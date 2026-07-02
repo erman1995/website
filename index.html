@@ -121,6 +121,19 @@
   .cv-download{text-align:center;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--rule);}
   .cv-download p{font-size:.88rem;color:var(--muted);margin-bottom:1.2rem;}
 
+  /* GAMES */
+  #games{background:var(--card);}
+  .games-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
+  .game-card{border:1px solid var(--rule);padding:2rem 1.8rem;text-decoration:none;color:var(--ink);position:relative;overflow:hidden;transition:border-color .2s,transform .2s;display:flex;flex-direction:column;}
+  .game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+  .game-card:hover::before{transform:scaleX(1);}
+  .game-card:hover{border-color:var(--gold-lt);transform:translateY(-3px);}
+  .game-emoji{font-size:2.2rem;margin-bottom:1rem;}
+  .game-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:500;margin-bottom:.5rem;line-height:1.2;}
+  .game-desc{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:1.2rem;flex:1;}
+  .game-play{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.4rem;}
+  .games-intro{font-size:.95rem;color:var(--muted);line-height:1.8;margin-bottom:2.5rem;max-width:60ch;}
+
   /* CONTACT */
   #contact{background:var(--ink);color:var(--cream);}
   #contact .section-label{color:var(--gold-lt);}
@@ -175,6 +188,7 @@
     .stat-num{font-size:2.5rem;}
     .about-grid,.cv-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem;}
     .teaching-grid{grid-template-columns:1fr;}
+    .games-grid{grid-template-columns:1fr;}
     .container{padding:0 1.5rem;}
     section{padding:3rem 0;}
     .pub-item{flex-direction:column;align-items:flex-start;padding:1.2rem 1.5rem;}
@@ -203,6 +217,7 @@
       <li><a href="#publications" data-en="Publications" data-tr="Yayınlar">Publications</a></li>
       <li><a href="#teaching" data-en="Teaching" data-tr="Dersler">Teaching</a></li>
       <li><a href="#cv" data-en="CV" data-tr="Özgeçmiş">CV</a></li>
+      <li><a href="#games" data-en="Games" data-tr="Oyunlar">Games</a></li>
       <li><a href="#contact" data-en="Contact" data-tr="İletişim">Contact</a></li>
     </ul>
     <div class="lang-switch">
@@ -221,6 +236,7 @@
   <a href="#publications" onclick="closeMenu()" data-en="Publications" data-tr="Yayınlar">Publications</a>
   <a href="#teaching" onclick="closeMenu()" data-en="Teaching" data-tr="Dersler">Teaching</a>
   <a href="#cv" onclick="closeMenu()" data-en="CV" data-tr="Özgeçmiş">CV</a>
+  <a href="#games" onclick="closeMenu()" data-en="Games" data-tr="Oyunlar">Games</a>
   <a href="#contact" onclick="closeMenu()" data-en="Contact" data-tr="İletişim">Contact</a>
   <div class="mobile-lang">
     <button class="active" id="mob-en" onclick="setLang('en',this);syncMobileLang('en')">EN</button>
@@ -231,7 +247,7 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-left">
-    <div class="hero-tag" data-en="Postdoctoral Researcher · Bilkent University" data-tr="Doktora Sonrası Araştırmacı · Bilkent Üniversitesi">Postdoctoral Researcher · Bilkent University</div>
+    <div class="hero-tag" data-en="Political Scientist · International Relations" data-tr="Siyaset Bilimci · Uluslararası İlişkiler">Political Scientist · International Relations</div>
     <h1 class="hero-name">Erman<br><em>Ermihan</em></h1>
     <p class="hero-desc"
        data-en="Exploring the affective dimensions of foreign policy — where emotions, identity, and ontological security shape how states and leaders navigate an uncertain world."
@@ -258,9 +274,9 @@
       <div><div class="stat-num">2025</div><div class="stat-label" data-en="PhD completed" data-tr="Doktora">PhD completed</div></div>
     </div>
     <div class="affil-block">
-      <p data-en="<strong>Great Realignment Project</strong><br>Carnegie Corporation of New York<br>with Assoc. Prof. Efe Tokdemir"
-         data-tr="<strong>Great Realignment Projesi</strong><br>Carnegie Corporation of New York<br>Doç. Dr. Efe Tokdemir ile birlikte">
-        <strong>Great Realignment Project</strong><br>Carnegie Corporation of New York<br>with Assoc. Prof. Efe Tokdemir
+      <p data-en="<strong>Research focus</strong><br>Ontological security, emotions in IR,<br>and Turkish foreign policy"
+         data-tr="<strong>Araştırma odağı</strong><br>Ontolojik güvenlik, Uİ'de duygular<br>ve Türk dış politikası">
+        <strong>Research focus</strong><br>Ontological security, emotions in IR,<br>and Turkish foreign policy
       </p>
     </div>
   </div>
@@ -627,15 +643,52 @@
     </div>
     <div class="cv-download">
       <p data-en="Full academic CV available for download" data-tr="Tam akademik özgeçmiş için indirin">Full academic CV available for download</p>
-      <a class="btn-primary" href="Erman_Ermihan_CV_June_2026.pdf" download data-en="Download CV (PDF)" data-tr="CV İndir (PDF)">Download CV (PDF)</a>
+      <a class="btn-primary" href="Erman_Ermihan_CV_2026.pdf" download data-en="Download CV (PDF)" data-tr="CV İndir (PDF)">Download CV (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="container">
+    <div class="section-label" data-en="05 / Games" data-tr="05 / Oyunlar">05 / Games</div>
+    <h2 class="section-title" data-en="Academic games corner" data-tr="Akademik oyunlar köşesi">Academic games corner</h2>
+    <p class="games-intro"
+       data-en="A little side project — interactive browser games about academic life and international relations. Built for fun, teaching, and the occasional laugh about the realities of the profession."
+       data-tr="Küçük bir yan proje — akademik hayat ve uluslararası ilişkiler üzerine interaktif tarayıcı oyunları. Eğlence, öğretim ve mesleğin gerçekleri üzerine ara sıra gülmek için yapıldı.">
+      A little side project — interactive browser games about academic life and international relations.
+    </p>
+    <div class="games-grid">
+      <a class="game-card" href="https://erman1995.github.io/website/akademik_oyun.html" target="_blank" rel="noopener">
+        <div class="game-emoji">🎓</div>
+        <div class="game-title" data-en="Academic Job Simulator" data-tr="Akademik İş Bulma Simülatörü">Academic Job Simulator</div>
+        <div class="game-desc" data-en="Survive the postdoc years, build your publication record, and navigate the brutal academic job market. Can you land a permanent position in 30 turns?"
+             data-tr="Postdoc yıllarında hayatta kal, yayın listeni oluştur ve acımasız akademik iş piyasasında yolunu bul. 30 turda kadroyu kapabilecek misin?">Survive the postdoc years and land a permanent position.</div>
+        <div class="game-play"><span data-en="Play" data-tr="Oyna">Play</span> →</div>
+      </a>
+      <a class="game-card" href="https://erman1995.github.io/ir-tabu/" target="_blank" rel="noopener">
+        <div class="game-emoji">🃏</div>
+        <div class="game-title" data-en="IR Taboo" data-tr="Uİ Tabu">IR Taboo</div>
+        <div class="game-desc" data-en="A classroom word game for international relations concepts. Describe the term without saying the forbidden words — perfect for teaching IR theory."
+             data-tr="Uluslararası ilişkiler kavramları için bir sınıf oyunu. Yasaklı kelimeleri söylemeden terimi anlat — Uİ teorisi öğretmek için ideal.">A classroom word game for IR concepts.</div>
+        <div class="game-play"><span data-en="Play" data-tr="Oyna">Play</span> →</div>
+      </a>
+      <a class="game-card" href="https://erman1995.github.io/website/kriz.html" target="_blank" rel="noopener">
+        <div class="game-emoji">🌍</div>
+        <div class="game-title" data-en="Crisis Simulator" data-tr="Kriz Simülatörü">Crisis Simulator</div>
+        <div class="game-desc" data-en="Navigate an international crisis as a decision-maker. Every choice shapes the outcome — diplomacy, deterrence, or escalation?"
+             data-tr="Bir karar alıcı olarak uluslararası bir krizde yol bul. Her seçim sonucu şekillendirir — diplomasi, caydırıcılık, yoksa tırmandırma mı?">Navigate an international crisis as a decision-maker.</div>
+        <div class="game-play"><span data-en="Play" data-tr="Oyna">Play</span> →</div>
+      </a>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
+
 <section id="contact">
   <div class="container">
-    <div class="section-label" data-en="05 / Contact" data-tr="05 / İletişim">05 / Contact</div>
+    <div class="section-label" data-en="06 / Contact" data-tr="06 / İletişim">06 / Contact</div>
     <h2 class="section-title" data-en="Get in touch" data-tr="İletişime geçin">Get in touch</h2>
     <div class="contact-grid">
       <div>
@@ -649,14 +702,16 @@
           <a class="contact-link" href="https://www.linkedin.com/in/erman-ermihan-81244b56/" target="_blank"><span class="contact-link-icon">in</span><span data-en="LinkedIn Profile" data-tr="LinkedIn Profili">LinkedIn Profile</span></a>
           <a class="contact-link" href="https://twitter.com/erman1995" target="_blank"><span class="contact-link-icon">𝕏</span>@erman1995</a>
           <a class="contact-link" href="https://www.youtube.com/@1995erman" target="_blank"><span class="contact-link-icon">▶</span><span data-en="YouTube Channel" data-tr="YouTube Kanalı">YouTube Channel</span></a>
+          <a class="contact-link" href="https://www.instagram.com/1995erman/" target="_blank"><span class="contact-link-icon">ig</span><span data-en="Instagram" data-tr="Instagram">Instagram</span></a>
+          <a class="contact-link" href="https://soundcloud.com/erman-ermihan-916832630" target="_blank"><span class="contact-link-icon">♪</span><span data-en="SoundCloud" data-tr="SoundCloud">SoundCloud</span></a>
         </div>
       </div>
       <div>
         <div style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-bottom:1rem;" data-en="Affiliations" data-tr="Kurumlar">Affiliations</div>
         <p style="font-size:.85rem;color:rgba(245,240,232,.65);line-height:1.85;">
-          <span data-en="Bilkent University, Department of International Relations" data-tr="Bilkent Üniversitesi, Uluslararası İlişkiler Bölümü">Bilkent University, Department of International Relations</span><br>
           <span data-en="Global Academy — Researcher & Online Operations Coordinator" data-tr="Global Academy — Araştırmacı & Operasyon Koordinatörü">Global Academy — Researcher & Online Operations Coordinator</span><br>
-          <span data-en="Uluslararası İlişkiler Journal — Publication Coordinator" data-tr="Uluslararası İlişkiler Dergisi — Yayın Koordinatörü">Uluslararası İlişkiler Journal — Publication Coordinator</span>
+          <span data-en="Uluslararası İlişkiler Journal — Publication Coordinator" data-tr="Uluslararası İlişkiler Dergisi — Yayın Koordinatörü">Uluslararası İlişkiler Journal — Publication Coordinator</span><br>
+          <span data-en="Based in Istanbul, Türkiye" data-tr="İstanbul, Türkiye">Based in Istanbul, Türkiye</span>
         </p>
       </div>
     </div>
@@ -665,7 +720,7 @@
 
 <footer>
   <p>© 2026 Erman Ermihan</p>
-  <p data-en="Bilkent University · Istanbul, Turkey" data-tr="Bilkent Üniversitesi · İstanbul, Türkiye">Bilkent University · Istanbul, Turkey</p>
+  <p data-en="Istanbul, Türkiye" data-tr="İstanbul, Türkiye">Istanbul, Türkiye</p>
 </footer>
 
 <script>
