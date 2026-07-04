@@ -83,8 +83,7 @@
   .pub-content{flex:1;min-width:0;}
   .pub-meta{display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;flex-wrap:wrap;}
   .pub-type{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;font-weight:400;}
-  .pub-type.a1{background:#e8f0e0;color:#3a6020;}
-  .pub-type.a2{background:#e0e8f4;color:#20406a;}
+  .pub-type.article{background:#e8f0e0;color:#3a6020;}
   .pub-type.book{background:#f0e8e0;color:#6a4020;}
   .pub-type.other{background:#f0f0f0;color:#555;}
   .pub-year{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);}
@@ -346,16 +345,15 @@
     <h2 class="section-title" data-en="Selected works" data-tr="Seçilmiş çalışmalar">Selected works</h2>
     <div class="pub-filter">
       <button class="filter-btn active" onclick="filterPubs('all',this)" data-en="All" data-tr="Tümü">All</button>
-      <button class="filter-btn" onclick="filterPubs('a1',this)" data-en="SSCI Journals" data-tr="SSCI Dergileri">SSCI Journals</button>
-      <button class="filter-btn" onclick="filterPubs('a2',this)" data-en="Int'l Journals" data-tr="Uluslararası">Int'l Journals</button>
+      <button class="filter-btn" onclick="filterPubs('article',this)" data-en="Articles" data-tr="Makaleler">Articles</button>
       <button class="filter-btn" onclick="filterPubs('book',this)" data-en="Book Chapters" data-tr="Kitap Bölümleri">Book Chapters</button>
       <button class="filter-btn" onclick="filterPubs('other',this)" data-en="Other" data-tr="Diğer">Other</button>
     </div>
     <div class="pub-list" id="pubList">
 
-      <div class="pub-item" data-cat="a1">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2026</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2026</span></div>
           <div class="pub-title">"From sacred spaces to imperial glory: a deconstruction of civilizational discourses in Türkiye and Saudi Arabia"</div>
           <div class="pub-authors">Lacin Idil Oztig & <strong>Erman Ermihan</strong></div>
           <div class="pub-journal">Globalizations</div>
@@ -365,9 +363,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a1">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2026</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2026</span></div>
           <div class="pub-title">"The Abject Other in Turkish Politics: Populist Securitization, Affect, and the Victory Party"</div>
           <div class="pub-authors">Ceren Melis Kıcıroğlu, <strong>Erman Ermihan</strong> & Umut Can Adışönmez</div>
           <div class="pub-journal">Southeast European and Black Sea Studies</div>
@@ -377,9 +375,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a1">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2026</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2026</span></div>
           <div class="pub-title">"The affective economy of aid: narcissistic security and the making of Türkiye's moral self"</div>
           <div class="pub-authors">Ceren Melis Kıcıroğlu & <strong>Erman Ermihan</strong></div>
           <div class="pub-journal">Third World Quarterly</div>
@@ -389,9 +387,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a1">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2025</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2025</span></div>
           <div class="pub-title">"Causal Mechanisms of Ontological (In)Security in Turkish Politics and Foreign Policy: Anxiety Transmittance from Sèvres to Lausanne"</div>
           <div class="pub-authors"><strong>Erman Ermihan</strong> & İrem Karamık</div>
           <div class="pub-journal">Turkish Studies</div>
@@ -401,9 +399,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a1">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2024</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2024</span></div>
           <div class="pub-title">"The Self and the Other: Individual Emotions and Ontological Security in Turkish Foreign Policy"</div>
           <div class="pub-authors">Nasuh Sofuoğlu, Samer Sharani & <strong>Erman Ermihan</strong></div>
           <div class="pub-journal">Alternatives: Global, Local, Political</div>
@@ -413,9 +411,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a1">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a1">SSCI</span><span class="pub-year">2024</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2024</span></div>
           <div class="pub-title">"Emotions and norms in the Syrian refugee crisis: the comparative responses of the EU and Turkey"</div>
           <div class="pub-authors"><strong>Erman Ermihan</strong> & Sinem Akgül Açıkmeşe</div>
           <div class="pub-journal">Journal of European Integration</div>
@@ -425,9 +423,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a2">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a2">Int'l</span><span class="pub-year">2024</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2024</span></div>
           <div class="pub-title">"End of jouissance, start of resentment: a Lacanian critical security approach to Turkey's relations with the West"</div>
           <div class="pub-authors"><strong>Erman Ermihan</strong></div>
           <div class="pub-journal">Critical Studies on Security</div>
@@ -437,9 +435,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a2">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a2">Int'l</span><span class="pub-year">2023</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2023</span></div>
           <div class="pub-title">"Quo Vadis, Turkish IR? Mapping Turkish IR's Footsteps within the Global"</div>
           <div class="pub-authors">İrem Karamık & <strong>Erman Ermihan</strong></div>
           <div class="pub-journal">All Azimuth, 12(2): 241–260</div>
@@ -449,9 +447,9 @@
         </div>
       </div>
 
-      <div class="pub-item" data-cat="a2">
+      <div class="pub-item" data-cat="article">
         <div class="pub-content">
-          <div class="pub-meta"><span class="pub-type a2">Int'l</span><span class="pub-year">2023</span></div>
+          <div class="pub-meta"><span class="pub-type article" data-en="Article" data-tr="Makale">Article</span><span class="pub-year">2023</span></div>
           <div class="pub-title">"Feeling Imagined Spaces: Emotional Geographies in the EU–Turkey Relations"</div>
           <div class="pub-authors">İrem Karamık & <strong>Erman Ermihan</strong></div>
           <div class="pub-journal">Uluslararası İlişkiler, 20(77): 71–88</div>
