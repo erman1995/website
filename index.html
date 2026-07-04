@@ -121,8 +121,22 @@
   .cv-download{text-align:center;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--rule);}
   .cv-download p{font-size:.88rem;color:var(--muted);margin-bottom:1.2rem;}
 
+  /* BEYOND RESEARCH */
+  #beyond{background:var(--cream);padding:4rem 0;}
+  #beyond .section-title{margin-bottom:2rem;}
+  .beyond-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .beyond-card{display:flex;align-items:center;gap:1.5rem;border:1px solid var(--rule);padding:1.5rem 1.8rem;text-decoration:none;color:var(--ink);transition:border-color .2s,transform .2s;background:var(--card);}
+  .beyond-card:hover{border-color:var(--gold-lt);transform:translateY(-2px);}
+  .beyond-emoji{font-size:1.8rem;flex-shrink:0;}
+  .beyond-body{flex:1;min-width:0;}
+  .beyond-role{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.25rem;}
+  .beyond-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:500;margin-bottom:.2rem;}
+  .beyond-desc{font-size:.78rem;color:var(--muted);line-height:1.5;}
+  .beyond-arrow{font-family:'DM Mono',monospace;color:var(--gold);flex-shrink:0;}
+
   /* GAMES */
-  #games{background:var(--card);}
+  #games{background:var(--card);padding:4rem 0;}
+  #games .section-title{margin-bottom:1rem;}
   .games-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
   .game-card{border:1px solid var(--rule);padding:2rem 1.8rem;text-decoration:none;color:var(--ink);position:relative;overflow:hidden;transition:border-color .2s,transform .2s;display:flex;flex-direction:column;}
   .game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
@@ -189,6 +203,7 @@
     .about-grid,.cv-grid,.contact-grid{grid-template-columns:1fr;gap:2.5rem;}
     .teaching-grid{grid-template-columns:1fr;}
     .games-grid{grid-template-columns:1fr;}
+    .beyond-grid{grid-template-columns:1fr;}
     .container{padding:0 1.5rem;}
     section{padding:3rem 0;}
     .pub-item{flex-direction:column;align-items:flex-start;padding:1.2rem 1.5rem;}
@@ -648,10 +663,38 @@
   </div>
 </section>
 
+<!-- BEYOND RESEARCH -->
+<section id="beyond">
+  <div class="container">
+    <div class="section-label" data-en="05 / Beyond Research" data-tr="05 / Araştırma Dışında">05 / Beyond Research</div>
+    <h2 class="section-title" data-en="Public engagement" data-tr="Kamusal katkı">Public engagement</h2>
+    <div class="beyond-grid">
+      <a class="beyond-card" href="https://tracademicus.wordpress.com/" target="_blank" rel="noopener">
+        <div class="beyond-emoji">✍️</div>
+        <div class="beyond-body">
+          <div class="beyond-role" data-en="Co-Founder · Academic Blog" data-tr="Kurucu Üye · Akademik Blog">Co-Founder · Academic Blog</div>
+          <div class="beyond-title">Academicus</div>
+          <div class="beyond-desc" data-en="Essays and commentary on IR, theory, and academic life." data-tr="Uİ, teori ve akademik hayat üzerine yazılar ve yorumlar.">Essays and commentary on IR, theory, and academic life.</div>
+        </div>
+        <div class="beyond-arrow">→</div>
+      </a>
+      <a class="beyond-card" href="https://open.spotify.com/show/5jlLe7hW48ebv53gmavwCB" target="_blank" rel="noopener">
+        <div class="beyond-emoji">🎙️</div>
+        <div class="beyond-body">
+          <div class="beyond-role" data-en="Co-Founder · Podcast" data-tr="Kurucu Üye · Podcast">Co-Founder · Podcast</div>
+          <div class="beyond-title">Paradigma</div>
+          <div class="beyond-desc" data-en="Conversations on international politics and social science." data-tr="Uluslararası siyaset ve sosyal bilimler üzerine sohbetler.">Conversations on international politics and social science.</div>
+        </div>
+        <div class="beyond-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- GAMES -->
 <section id="games">
   <div class="container">
-    <div class="section-label" data-en="05 / Games" data-tr="05 / Oyunlar">05 / Games</div>
+    <div class="section-label" data-en="06 / Games" data-tr="06 / Oyunlar">06 / Games</div>
     <h2 class="section-title" data-en="Academic games corner" data-tr="Akademik oyunlar köşesi">Academic games corner</h2>
     <p class="games-intro"
        data-en="A little side project — interactive browser games about academic life and international relations. Built for fun, teaching, and the occasional laugh about the realities of the profession."
@@ -688,7 +731,7 @@
 
 <section id="contact">
   <div class="container">
-    <div class="section-label" data-en="06 / Contact" data-tr="06 / İletişim">06 / Contact</div>
+    <div class="section-label" data-en="07 / Contact" data-tr="07 / İletişim">07 / Contact</div>
     <h2 class="section-title" data-en="Get in touch" data-tr="İletişime geçin">Get in touch</h2>
     <div class="contact-grid">
       <div>
